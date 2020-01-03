@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">QueRolloApp</string>
+
+    <string name="chats">Chats</string>
+    <string name="groups">Grupos</string>
+    <string name="contacts">Contactos</string>
+    <string name="acceder">Acceder</string>
+    <string name="forgetPassword"><u>¿Olvidaste la contraseña?</u></string>
+    <string name="new_account"><u>¿Necesitas una nueva cuenta?</u></string>
+    <string name="phone">Teléfono celular</string>
+    <string name="using_phone">o acceder usando mi</string>
+    <string name="create_account">Crear cuenta</string>
+    <string name="already_have_account"><u>¿Ya tienes una cuenta? Inicia sesión</u></string>
+</resources>

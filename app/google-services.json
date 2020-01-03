@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "17490924913",
+    "firebase_url": "https://querolloapp.firebaseio.com",
+    "project_id": "querolloapp",
+    "storage_bucket": "querolloapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17490924913:android:5ac4c0c65a1106fe1312d0",
+        "android_client_info": {
+          "package_name": "com.example.querolloapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17490924913-3kn98l80g1ilsk4bacam5ff2310gvcl3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.querolloapp",
+            "certificate_hash": "c059a01bd43f9e5259fa135c41c34bee39adf902"
+          }
+        },
+        {
+          "client_id": "17490924913-p8lgvh4i21661fak6trh9jiqipbh4p5e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtrQG--O7tFETe7X4OUXVSgDoUaL4EDKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17490924913-p8lgvh4i21661fak6trh9jiqipbh4p5e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
