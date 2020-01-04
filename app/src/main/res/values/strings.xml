@@ -11,4 +11,10 @@
     <string name="using_phone">o acceder usando mi</string>
     <string name="create_account">Crear cuenta</string>
     <string name="already_have_account"><u>¿Ya tienes una cuenta? Inicia sesión</u></string>
+    <string name="find_friends">Encuentra amigos</string>
+    <string name="settings">Ajustes</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="available">Disponible</string>
+    <string name="update_settings">Actualizar</string>
 </resources>
