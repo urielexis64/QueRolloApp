@@ -76,7 +76,6 @@
         android:layout_centerHorizontal="true"
         android:textSize="17sp"
         android:textColor="@color/colorPrimaryDark"
-        android:onClick="login"
         />
 
 </RelativeLayout>
