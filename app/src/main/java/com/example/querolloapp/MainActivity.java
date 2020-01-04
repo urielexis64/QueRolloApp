@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,11 +20,15 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout myTabLayout;
     private TabsAccessorAdapter myTabAccessorAdapter;
     private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth= FirebaseAuth.getInstance();
+        currentUser= mAuth.getCurrentUser();
 
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
@@ -37,12 +42,10 @@ public class MainActivity extends AppCompatActivity {
         myTabLayout.setupWithViewPager(myViewPager);
     }
 
-    int a=0;
-
     @Override
     protected void onStart() {
         super.onStart();
-        Toast.makeText(getApplicationContext(),++a + "", Toast.LENGTH_SHORT).show();
+
         if(currentUser==null){
             SendUserToLoginActivity();
         }
