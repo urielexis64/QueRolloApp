@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.tabs.TabLayout;
@@ -36,10 +37,12 @@ public class MainActivity extends AppCompatActivity {
         myTabLayout.setupWithViewPager(myViewPager);
     }
 
+    int a=0;
+
     @Override
     protected void onStart() {
         super.onStart();
-
+        Toast.makeText(getApplicationContext(),++a + "", Toast.LENGTH_SHORT).show();
         if(currentUser==null){
             SendUserToLoginActivity();
         }
