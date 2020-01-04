@@ -2,6 +2,7 @@ package com.example.querolloapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
                 sendUserToRegisterActivity();
             }
         });
+
     }
 
     private void initializeFields() {
