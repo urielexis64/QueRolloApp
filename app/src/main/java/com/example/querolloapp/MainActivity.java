@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestNewGroup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
         builder.setTitle("Nombre del grupo: ");
 
         final EditText txtGroupName = new EditText(MainActivity.this);
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String groupName = txtGroupName.getText().toString();
                 if(TextUtils.isEmpty(groupName)){
-                    Toast.makeText(MainActivity.this, "Por favor introduce un nombre de grupo...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Por favor introduce un nombre de grupo...", Toast.LENGTH_SHORT).show();
                 }else{
                     createNewGroup(groupName);
                 }

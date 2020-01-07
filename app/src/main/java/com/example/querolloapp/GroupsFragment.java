@@ -1,9 +1,16 @@
 package com.example.querolloapp;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,25 +18,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class GroupsFragment extends Fragment {
-
+public class GroupsFragment extends Fragment implements RecyclerViewClickListener {
 
     private View groupFragmentView;
     private RecyclerView recyclerView;
@@ -40,9 +44,7 @@ public class GroupsFragment extends Fragment {
     private DatabaseReference groupRef;
 
     public GroupsFragment() {
-        // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,9 +67,8 @@ public class GroupsFragment extends Fragment {
                 Set<String> set = new HashSet<>();
                 Iterator iterator = dataSnapshot.getChildren().iterator();
 
-                while(iterator.hasNext()){
-
-                    set.add(((DataSnapshot)iterator.next()).getKey());
+                while (iterator.hasNext()) {
+                    set.add(((DataSnapshot) iterator.next()).getKey());
                 }
                 listOfGroups.clear();
                 listOfGroups.addAll(set);
@@ -88,7 +89,40 @@ public class GroupsFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
 
         adapter = new RecyclerViewAdapter(getContext(), listOfGroups);
+
+        ((RecyclerViewAdapter) adapter).setOnClickListener(this);
+
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onRowClicked(int position) {
+
+        String currentGroupName = listOfGroups.get(position);
+
+        Intent groupChatIntent = new Intent(getContext(), GroupChatActivity.class);
+
+        groupChatIntent.putExtra("group_name", currentGroupName);
+        startActivity(groupChatIntent);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onViewClicked(View v, int position) {
+        if (v instanceof ImageView) {
+            Intent intent = new Intent(getContext(), ProfileImagePreviewActivity.class);
+
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), v, getString(R.string.transition_dialog)).toBundle();
+
+            BitmapDrawable bitmapDrawable = ((BitmapDrawable) ((ImageView) v).getDrawable());
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] imageInByte = stream.toByteArray();
+            intent.putExtra("byteArray", imageInByte);
+            intent.putExtra("group_name", listOfGroups.get(position));
+            startActivity(intent, bundle);
+        }
+    }
 }
