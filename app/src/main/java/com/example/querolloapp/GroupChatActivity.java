@@ -5,15 +5,24 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -29,14 +38,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+@RequiresApi(api = Build.VERSION_CODES.M)
 public class GroupChatActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private EditText txtMessage;
     private FloatingActionButton btnSendMessage;
     private ScrollView scrollView;
-    private TextView lblMessages;
+    private LinearLayout parentLayout;
 
     private FirebaseAuth mAuth;
     private DatabaseReference usersRef, groupNameRef, groupMessageKeyRef;
@@ -58,21 +67,12 @@ public class GroupChatActivity extends AppCompatActivity {
         initializeFields();
         getUserInfo();
 
-        btnSendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveMessageInfoToDataBase();
-                txtMessage.setText("");
-            }
-        });
+        scrollView.post(()-> scrollView.fullScroll(View.FOCUS_DOWN));
 
-        txtMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                scrollView.fullScroll(View.FOCUS_DOWN);
-            }
+        btnSendMessage.setOnClickListener(v -> {
+            saveMessageInfoToDataBase();
+            txtMessage.setText("");
         });
-
     }
 
     @Override
@@ -83,16 +83,12 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.exists()){
                     displayMessages(dataSnapshot);
-                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    scrollView.post(()-> scrollView.fullScroll(View.FOCUS_DOWN));
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists()){
-                    displayMessages(dataSnapshot);
-                    scrollView.fullScroll(View.FOCUS_DOWN);
-                }
             }
 
             @Override
@@ -123,7 +119,7 @@ public class GroupChatActivity extends AppCompatActivity {
         txtMessage = findViewById(R.id.input_group_message);
         btnSendMessage = findViewById(R.id.send_message_button);
         scrollView = findViewById(R.id.my_scroll_view);
-        lblMessages = findViewById(R.id.group_chat_text_display);
+        parentLayout = findViewById(R.id.layout);
     }
 
     @Override
@@ -181,16 +177,93 @@ public class GroupChatActivity extends AppCompatActivity {
         Iterator iterator = dataSnapshot.getChildren().iterator();
 
         while(iterator.hasNext()){
-
             String chatDate =(String)((DataSnapshot)iterator.next()).getValue();
             String chatMessage =(String)((DataSnapshot)iterator.next()).getValue();
             String chatName =(String)((DataSnapshot)iterator.next()).getValue();
             String chatTime =(String)((DataSnapshot)iterator.next()).getValue();
 
-            lblMessages.append(chatName+": \n"+chatMessage +"\n"+chatTime+"  "+chatDate+"\n\n");
+            parentLayout.addView(addCardMessage(chatDate,chatName, chatMessage, chatTime));
+            lastDate = chatDate;
+        }
+    }
+    private String lastDate;
 
+    private CardView addCardMessage(String date, String username, String message, String time){
+        if(date == null || !date.equals(lastDate)){
+            TextView txtDate = new TextView(this);
+            LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            viewParams.gravity = Gravity.CENTER;
+            viewParams.setMargins(0,10,0,10);
+            txtDate.setLayoutParams(viewParams);
+            txtDate.setPadding(10,10,10,10);
+            txtDate.setTextSize(14);
+            txtDate.setAllCaps(true);
+            txtDate.setBackground(getDrawable(R.drawable.background_group_date_text));
+            txtDate.setText(date);
+            parentLayout.addView(txtDate);
         }
 
+        CardView cardView = new CardView(this);
+        LinearLayout.LayoutParams cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        cardViewParams.setMargins(15,7,0,7);
+        cardView.setLayoutParams(cardViewParams);
+        cardView.setRadius(10f);
+        cardView.setCardElevation(5f);
+
+        LinearLayout mainLinearLayout = new LinearLayout(this);
+        mainLinearLayout.setLayoutParams(cardViewParams);
+        mainLinearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        TextView txtUsername = new TextView(this);
+        LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textViewParams.setMargins(4,0,4,0);
+        txtUsername.setTextColor(getColor(R.color.colorPrimaryDark));
+        txtUsername.setTextSize(12f);
+        txtUsername.setTypeface(Typeface.DEFAULT_BOLD);
+        txtUsername.setText(username);
+        txtUsername.setLayoutParams(textViewParams);
+        int r =(int) (Math.random()*255);
+        int g =(int) (Math.random()*255);
+        int b =(int) (Math.random()*255);
+        txtUsername.setTextColor(Color.rgb(r,g,b));
+
+        LinearLayout secondaryLinearLayout = new LinearLayout(this);
+        LinearLayout.MarginLayoutParams secondaryMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        secondaryLinearLayout.setLayoutParams(secondaryMarginParams);
+        secondaryLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        TextView txtMessage = new TextView(this);
+        txtMessage.setText(message);
+        txtMessage.setPadding(0,2,2,2);
+        txtMessage.setMaxWidth(350);
+        txtMessage.setTextSize(14f);
+        txtMessage.setTextColor(getColor(android.R.color.background_dark));
+        txtMessage.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        txtMessage.setSingleLine(false);
+        LinearLayout.MarginLayoutParams txtMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        txtMarginParams.setMargins(4,0,20,0);
+        txtMessage.setLayoutParams(txtMarginParams);
+
+        TextView txtMessageTime = new TextView(this);
+        LinearLayout.MarginLayoutParams txtTimeMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        txtMessageTime.setPadding(2,2,6,0);
+        txtMessageTime.setTextSize(11f);
+        txtMessageTime.setTextColor(getColor(android.R.color.darker_gray));
+        txtTimeMarginParams.setMarginStart(2);
+        txtTimeMarginParams.setMarginEnd(2);
+        txtMessageTime.setGravity(Gravity.BOTTOM);
+        txtMessageTime.setText(time);
+        txtMessageTime.setLayoutParams(txtTimeMarginParams);
+
+        secondaryLinearLayout.addView(txtMessage);
+        secondaryLinearLayout.addView(txtMessageTime);
+
+        mainLinearLayout.addView(txtUsername);
+        mainLinearLayout.addView(secondaryLinearLayout);
+
+        cardView.addView(mainLinearLayout);
+
+        return cardView;
     }
 
 }

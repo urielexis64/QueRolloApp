@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GroupChatActivity">
+    tools:context=".GroupChatActivity"
+    android:background="@drawable/group_chat_background_image">
 
     <include
         android:id="@+id/group_chat_bar_layout"
@@ -15,32 +16,91 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/group_chat_bar_layout"
-        android:layout_above="@id/my_linear_layout">
+        android:layout_above="@id/my_linear_layout"
+        android:scrollbarStyle="outsideInset"
+        >
 
         <LinearLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+              >
+<!--
+              <androidx.cardview.widget.CardView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:cardCornerRadius="4dp"
+                  android:layout_marginLeft="5dp"
+                  android:layout_marginTop="2dp">
 
-            <TextView
-                android:id="@+id/group_chat_text_display"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textAllCaps="false"
-                android:textSize="20sp"
-                android:textColor="@android:color/background_dark"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="50dp"
-                />
+                  <LinearLayout
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
+
+                      <TextView
+                          android:id="@+id/user_name"
+                          android:text="PruebSDSDAAAAAAFSDFa"
+                          android:textSize="10sp"
+                          android:textStyle="bold"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:paddingLeft="8dp"
+                          android:textColor="@color/colorPrimaryDark"
+                          />
+
+                      <androidx.constraintlayout.widget.ConstraintLayout
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal">
+
+                          <TextView
+                              android:id="@+id/group_chat_text_display"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:inputType="textMultiLine"
+                              android:maxWidth="200dp"
+                              android:paddingLeft="8dp"
+                              android:paddingTop="2dp"
+                              android:paddingRight="2dp"
+                              android:paddingBottom="2dp"
+                              android:text="Puro wey con las asd asd asd asda asd asd asd asd asd asd dfgdfasd asd asd ads asd asd"
+                              android:textAllCaps="false"
+                              android:textColor="#000"
+                              android:textSize="12sp"
+                              app:layout_constraintBottom_toBottomOf="@+id/message_time"
+                              app:layout_constraintStart_toStartOf="parent" />
+
+                          <TextView
+                              android:id="@+id/message_time"
+                              android:layout_width="match_parent"
+                              android:layout_height="0dp"
+                              android:layout_marginEnd="7dp"
+                              android:gravity="bottom"
+                              android:padding="2dp"
+                              android:text="10:00 PM"
+                              android:textAllCaps="false"
+                              android:textColor="#aaa"
+                              android:textSize="8sp"
+                              app:layout_constraintBottom_toBottomOf="parent"
+                              app:layout_constraintEnd_toEndOf="@+id/group_chat_text_display" />
+                      </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                  </LinearLayout>
+
+
+              </androidx.cardview.widget.CardView>
+              -->
+
         </LinearLayout>
     </ScrollView>
 
     <LinearLayout
         android:id="@+id/my_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
@@ -49,9 +109,20 @@
             android:id="@+id/input_group_message"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:maxHeight="300dp"
+            android:gravity="center_vertical"
             android:hint="@string/type_a_message"
-            android:padding="17dp"
-            />
+            android:translationZ="5dp"
+            android:background="@drawable/background_group_input_text"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="2000"
+            android:textSize="16sp"
+            android:maxLines="8"
+            android:paddingBottom="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="4dp"
+            android:paddingLeft="14dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/send_message_button"
