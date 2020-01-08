@@ -11,10 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".PhoneLoginActivity" android:theme="@style/Theme.MaterialComponents"></activity>
         <activity
             android:name=".ProfileImagePreviewActivity"
-            android:theme="@style/AppTheme.Transparent"></activity>
-        <activity android:name=".GroupChatActivity" />
+            android:theme="@style/AppTheme.Transparent" />
+        <activity android:name=".GroupChatActivity" android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />

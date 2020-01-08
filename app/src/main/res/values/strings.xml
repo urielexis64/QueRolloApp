@@ -21,4 +21,8 @@
     <string name="type_a_message">Escribe un mensaje...</string>
 
     <string name="transition_dialog">transition_dialog</string>
+    <string name="phone_number">Número de teléfono</string>
+    <string name="verification_code">Código de verificación</string>
+    <string name="send_verification_code">Enviar código de verificación</string>
+    <string name="verify">Verificar</string>
 </resources>

@@ -15,7 +15,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -31,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.gw.swipeback.SwipeBackLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,19 +60,20 @@ public class GroupChatActivity extends AppCompatActivity {
         currentGroupName = getIntent().getStringExtra("group_name");
 
         mAuth = FirebaseAuth.getInstance();
-        currentUserId= mAuth.getCurrentUser().getUid();
-        usersRef= FirebaseDatabase.getInstance().getReference().child("Users");
+        currentUserId = mAuth.getCurrentUser().getUid();
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         groupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName);
 
         initializeFields();
         getUserInfo();
 
-        scrollView.post(()-> scrollView.fullScroll(View.FOCUS_DOWN));
+        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
 
         btnSendMessage.setOnClickListener(v -> {
             saveMessageInfoToDataBase();
             txtMessage.setText("");
         });
+
     }
 
     @Override
@@ -81,9 +82,9 @@ public class GroupChatActivity extends AppCompatActivity {
         groupNameRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     displayMessages(dataSnapshot);
-                    scrollView.post(()-> scrollView.fullScroll(View.FOCUS_DOWN));
+                    scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
                 }
             }
 
@@ -132,7 +133,7 @@ public class GroupChatActivity extends AppCompatActivity {
         usersRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     currentUserName = dataSnapshot.child("name").getValue().toString();
                 }
             }
@@ -148,7 +149,7 @@ public class GroupChatActivity extends AppCompatActivity {
         String message = txtMessage.getText().toString();
         String messageKey = groupNameRef.push().getKey();
 
-        if(TextUtils.isEmpty(message))
+        if (TextUtils.isEmpty(message))
             return;
 
         Calendar calForDate = Calendar.getInstance();
@@ -159,7 +160,7 @@ public class GroupChatActivity extends AppCompatActivity {
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
         currentTime = currentTimeFormat.format(calForTime.getTime());
 
-        HashMap<String, Object> groupMessageKey =new HashMap<>();
+        HashMap<String, Object> groupMessageKey = new HashMap<>();
         groupNameRef.updateChildren(groupMessageKey);
 
         groupMessageKeyRef = groupNameRef.child(messageKey);
@@ -176,26 +177,27 @@ public class GroupChatActivity extends AppCompatActivity {
     private void displayMessages(DataSnapshot dataSnapshot) {
         Iterator iterator = dataSnapshot.getChildren().iterator();
 
-        while(iterator.hasNext()){
-            String chatDate =(String)((DataSnapshot)iterator.next()).getValue();
-            String chatMessage =(String)((DataSnapshot)iterator.next()).getValue();
-            String chatName =(String)((DataSnapshot)iterator.next()).getValue();
-            String chatTime =(String)((DataSnapshot)iterator.next()).getValue();
+        while (iterator.hasNext()) {
+            String chatDate = (String) ((DataSnapshot) iterator.next()).getValue();
+            String chatMessage = (String) ((DataSnapshot) iterator.next()).getValue();
+            String chatName = (String) ((DataSnapshot) iterator.next()).getValue();
+            String chatTime = (String) ((DataSnapshot) iterator.next()).getValue();
 
-            parentLayout.addView(addCardMessage(chatDate,chatName, chatMessage, chatTime));
+            parentLayout.addView(addCardMessage(chatDate, chatName, chatMessage, chatTime));
             lastDate = chatDate;
         }
     }
+
     private String lastDate;
 
-    private CardView addCardMessage(String date, String username, String message, String time){
-        if(date == null || !date.equals(lastDate)){
+    private CardView addCardMessage(String date, String username, String message, String time) {
+        if (date == null || !date.equals(lastDate)) {
             TextView txtDate = new TextView(this);
             LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             viewParams.gravity = Gravity.CENTER;
-            viewParams.setMargins(0,10,0,10);
+            viewParams.setMargins(0, 10, 0, 10);
             txtDate.setLayoutParams(viewParams);
-            txtDate.setPadding(10,10,10,10);
+            txtDate.setPadding(10, 10, 10, 10);
             txtDate.setTextSize(14);
             txtDate.setAllCaps(true);
             txtDate.setBackground(getDrawable(R.drawable.background_group_date_text));
@@ -205,9 +207,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
         CardView cardView = new CardView(this);
         LinearLayout.LayoutParams cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        cardViewParams.setMargins(15,7,0,7);
+        cardViewParams.setMargins(15, 0, 0, 20);
         cardView.setLayoutParams(cardViewParams);
-        cardView.setRadius(10f);
+        cardView.setRadius(15f);
         cardView.setCardElevation(5f);
 
         LinearLayout mainLinearLayout = new LinearLayout(this);
@@ -216,16 +218,16 @@ public class GroupChatActivity extends AppCompatActivity {
 
         TextView txtUsername = new TextView(this);
         LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        textViewParams.setMargins(4,0,4,0);
+        textViewParams.setMargins(4, 0, 4, 0);
         txtUsername.setTextColor(getColor(R.color.colorPrimaryDark));
         txtUsername.setTextSize(12f);
         txtUsername.setTypeface(Typeface.DEFAULT_BOLD);
         txtUsername.setText(username);
         txtUsername.setLayoutParams(textViewParams);
-        int r =(int) (Math.random()*255);
-        int g =(int) (Math.random()*255);
-        int b =(int) (Math.random()*255);
-        txtUsername.setTextColor(Color.rgb(r,g,b));
+        int r = (int) (Math.random() * 255);
+        int g = (int) (Math.random() * 255);
+        int b = (int) (Math.random() * 255);
+        txtUsername.setTextColor(Color.rgb(r, g, b));
 
         LinearLayout secondaryLinearLayout = new LinearLayout(this);
         LinearLayout.MarginLayoutParams secondaryMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -234,19 +236,19 @@ public class GroupChatActivity extends AppCompatActivity {
 
         TextView txtMessage = new TextView(this);
         txtMessage.setText(message);
-        txtMessage.setPadding(0,2,2,2);
+        txtMessage.setPadding(0, 2, 2, 2);
         txtMessage.setMaxWidth(350);
         txtMessage.setTextSize(14f);
         txtMessage.setTextColor(getColor(android.R.color.background_dark));
         txtMessage.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         txtMessage.setSingleLine(false);
         LinearLayout.MarginLayoutParams txtMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        txtMarginParams.setMargins(4,0,20,0);
+        txtMarginParams.setMargins(4, 0, 20, 0);
         txtMessage.setLayoutParams(txtMarginParams);
 
         TextView txtMessageTime = new TextView(this);
         LinearLayout.MarginLayoutParams txtTimeMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        txtMessageTime.setPadding(2,2,6,0);
+        txtMessageTime.setPadding(2, 2, 6, 0);
         txtMessageTime.setTextSize(11f);
         txtMessageTime.setTextColor(getColor(android.R.color.darker_gray));
         txtTimeMarginParams.setMarginStart(2);

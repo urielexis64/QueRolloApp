@@ -28,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View contentView = LayoutInflater.from(contexto).inflate(R.layout.itempersonallinear, null);
+        View contentView = LayoutInflater.from(contexto).inflate(R.layout.itempersonallinear, parent, false);
         return new Holder(contentView, listener);
     }
 
@@ -58,20 +58,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             groupName= itemView.findViewById(R.id.group_name);
             img = itemView.findViewById(R.id.profile_group_image);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(listener != null)
-                        listener.onRowClicked(getAdapterPosition());
-                }
+            itemView.setOnClickListener(v -> {
+                if(listener != null)
+                    listener.onRowClicked(getAdapterPosition());
             });
 
-            img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(listener != null){
-                        listener.onViewClicked(v, getAdapterPosition());
-                    }
+            img.setOnClickListener(v -> {
+                if(listener != null){
+                    listener.onViewClicked(v, getAdapterPosition());
                 }
             });
 

@@ -104,7 +104,6 @@ public class GroupsFragment extends Fragment implements RecyclerViewClickListene
 
         groupChatIntent.putExtra("group_name", currentGroupName);
         startActivity(groupChatIntent);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

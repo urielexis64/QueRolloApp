@@ -37,18 +37,13 @@ public class LoginActivity extends AppCompatActivity {
 
         initializeFields();
 
-        lblNewAcount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendUserToRegisterActivity();
-            }
-        });
+        lblNewAcount.setOnClickListener(view -> sendUserToRegisterActivity());
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                allowUserToLogin();
-            }
+        btnLogin.setOnClickListener(view -> allowUserToLogin());
+
+        btnPhoneLogin.setOnClickListener(v ->{
+            Intent phoneLoginIntent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
+            startActivity(phoneLoginIntent);
         });
 
     }
