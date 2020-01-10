@@ -93,13 +93,11 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-
     }
 
     private void sendUserToLoginActivity() {
@@ -139,44 +137,30 @@ public class MainActivity extends AppCompatActivity {
         txtGroupName.setHint("p. ej. Mis amigos");
         builder.setView(txtGroupName);
 
-        builder.setPositiveButton("Crear", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String groupName = txtGroupName.getText().toString();
-                if(TextUtils.isEmpty(groupName)){
-                    Toast.makeText(getBaseContext(), "Por favor introduce un nombre de grupo...", Toast.LENGTH_SHORT).show();
-                }else{
-                    createNewGroup(groupName);
-                }
+        builder.setPositiveButton("Crear", (dialog, which) -> {
+            String groupName = txtGroupName.getText().toString();
+            if(TextUtils.isEmpty(groupName)){
+                Toast.makeText(getBaseContext(), "Por favor introduce un nombre de grupo...", Toast.LENGTH_SHORT).show();
+            }else{
+                createNewGroup(groupName);
             }
         });
 
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
 
     private void createNewGroup(final String groupName) {
-        rootRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(MainActivity.this, "El grupo \""+groupName+"\" fue creado correctamente.", Toast.LENGTH_SHORT).show();
-                }
+        rootRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Toast.makeText(MainActivity.this, "El grupo \""+groupName+"\" fue creado correctamente.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void sendUserToSettingsActivity() {
         Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(settingsIntent);
     }
-
-
 }

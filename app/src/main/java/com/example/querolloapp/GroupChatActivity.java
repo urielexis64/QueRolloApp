@@ -2,14 +2,13 @@ package com.example.querolloapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -30,7 +29,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gw.swipeback.SwipeBackLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,7 +36,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
-@RequiresApi(api = Build.VERSION_CODES.M)
 public class GroupChatActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
@@ -112,7 +109,6 @@ public class GroupChatActivity extends AppCompatActivity {
     private void initializeFields() {
         mToolbar = findViewById(R.id.group_chat_bar_layout);
         mToolbar.setTitle(currentGroupName);
-        mToolbar.setElevation(50f);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -200,7 +196,7 @@ public class GroupChatActivity extends AppCompatActivity {
             txtDate.setPadding(10, 10, 10, 10);
             txtDate.setTextSize(14);
             txtDate.setAllCaps(true);
-            txtDate.setBackground(getDrawable(R.drawable.background_group_date_text));
+            txtDate.setBackground(ContextCompat.getDrawable(this,R.drawable.background_group_date_text));
             txtDate.setText(date);
             parentLayout.addView(txtDate);
         }
@@ -219,7 +215,7 @@ public class GroupChatActivity extends AppCompatActivity {
         TextView txtUsername = new TextView(this);
         LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textViewParams.setMargins(4, 0, 4, 0);
-        txtUsername.setTextColor(getColor(R.color.colorPrimaryDark));
+        txtUsername.setTextColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         txtUsername.setTextSize(12f);
         txtUsername.setTypeface(Typeface.DEFAULT_BOLD);
         txtUsername.setText(username);
@@ -239,7 +235,7 @@ public class GroupChatActivity extends AppCompatActivity {
         txtMessage.setPadding(0, 2, 2, 2);
         txtMessage.setMaxWidth(350);
         txtMessage.setTextSize(14f);
-        txtMessage.setTextColor(getColor(android.R.color.background_dark));
+        txtMessage.setTextColor(ContextCompat.getColor(this,android.R.color.background_dark));
         txtMessage.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         txtMessage.setSingleLine(false);
         LinearLayout.MarginLayoutParams txtMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -250,7 +246,7 @@ public class GroupChatActivity extends AppCompatActivity {
         LinearLayout.MarginLayoutParams txtTimeMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         txtMessageTime.setPadding(2, 2, 6, 0);
         txtMessageTime.setTextSize(11f);
-        txtMessageTime.setTextColor(getColor(android.R.color.darker_gray));
+        txtMessageTime.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
         txtTimeMarginParams.setMarginStart(2);
         txtTimeMarginParams.setMarginEnd(2);
         txtMessageTime.setGravity(Gravity.BOTTOM);
