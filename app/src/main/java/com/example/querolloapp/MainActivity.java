@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,11 +51,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         myViewPager = findViewById(R.id.main_tabs_pager);
-        myTabAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager(), 0, getString(R.string.chats), getString(R.string.groups), getString(R.string.contacts));
+        myTabAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager(), 0,
+                getString(R.string.chats),
+                getString(R.string.groups),
+                getString(R.string.contacts));
         myViewPager.setAdapter(myTabAccessorAdapter);
 
         myTabLayout = findViewById(R.id.main_tabs);
         myTabLayout.setupWithViewPager(myViewPager);
+        myTabLayout.getTabAt(3).setIcon(R.drawable.add_user);
+        LinearLayout layout = (LinearLayout)((LinearLayout) myTabLayout.getChildAt(0)).getChildAt(3);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
+        layoutParams.weight = .6f;
+        layout.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -93,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -117,14 +127,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.main_find_friends_option) {
-
+            sendUserToFindFriendsActivity();
         } else if (item.getItemId() == R.id.main_settings_option) {
             sendUserToSettingsActivity();
         } else if (item.getItemId() == R.id.main_logout_option) {
             mAuth.signOut();
             sendUserToLoginActivity();
-        }else if(item.getItemId() == R.id.main_create_group_option){
-             requestNewGroup();
+        } else if (item.getItemId() == R.id.main_create_group_option) {
+            requestNewGroup();
         }
         return true;
     }
@@ -139,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Crear", (dialog, which) -> {
             String groupName = txtGroupName.getText().toString();
-            if(TextUtils.isEmpty(groupName)){
+            if (TextUtils.isEmpty(groupName)) {
                 Toast.makeText(getBaseContext(), "Por favor introduce un nombre de grupo...", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 createNewGroup(groupName);
             }
         });
@@ -153,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNewGroup(final String groupName) {
         rootRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Toast.makeText(MainActivity.this, "El grupo \""+groupName+"\" fue creado correctamente.", Toast.LENGTH_SHORT).show();
+            if (task.isSuccessful()) {
+                Toast.makeText(MainActivity.this, "El grupo \"" + groupName + "\" fue creado correctamente.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -162,5 +172,10 @@ public class MainActivity extends AppCompatActivity {
     private void sendUserToSettingsActivity() {
         Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(settingsIntent);
+    }
+
+    private void sendUserToFindFriendsActivity() {
+        Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
+        startActivity(findFriendsIntent);
     }
 }

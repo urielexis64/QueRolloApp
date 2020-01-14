@@ -3,13 +3,9 @@ package com.example.querolloapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -29,10 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -85,25 +78,6 @@ public class SettingsActivity extends AppCompatActivity {
             startActivityForResult(galleryIntent, GALLERY_PICK);
         });
 
-        imgProfile.setOnLongClickListener(v -> {
-            imagePreview();
-            return false;
-        });
-
-    }
-
-    private void imagePreview() {
-        Intent intent = new Intent(this, ProfileImageActivity.class);
-        Pair<View, String> p1 = Pair.create(imgProfile, "profile_image");
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, p1);
-        BitmapDrawable bitmapDrawable = ((BitmapDrawable) (imgProfile).getDrawable());
-        Bitmap bitmap = bitmapDrawable.getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] imageInByte = stream.toByteArray();
-        intent.putExtra("image", imageInByte);
-        startActivity(intent, options.toBundle());
     }
 
     private void retrieveUserInfo() {

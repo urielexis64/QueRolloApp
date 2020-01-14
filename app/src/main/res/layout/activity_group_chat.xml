@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     app:directionMode="left"
     app:isSwipeFromEdge="true"
     app:maskAlpha="180"
     app:swipeBackFactor="0.5"
-    android:fitsSystemWindows="true"
     tools:context=".GroupChatActivity">
 
     <RelativeLayout
@@ -18,8 +18,7 @@
 
         <include
             android:id="@+id/group_chat_bar_layout"
-            layout="@layout/app_bar_layout"
-            />
+            layout="@layout/app_bar_layout" />
 
         <ScrollView
             android:id="@+id/my_scroll_view"
@@ -35,72 +34,74 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <!--
-                              <androidx.cardview.widget.CardView
+                  <androidx.cardview.widget.CardView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:cardCornerRadius="4dp"
+                      android:layout_marginLeft="5dp"
+                      android:layout_gravity="end"
+                      android:layout_marginTop="2dp">
+
+                      <LinearLayout
+                          android:background="#D1FFCE"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical">
+
+                          <TextView
+                              android:id="@+id/user_name"
+                              android:text="PruebSDSDAAAAAAFSDFa"
+                              android:textSize="10sp"
+                              android:textStyle="bold"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:paddingLeft="8dp"
+                              android:textColor="@color/colorPrimaryDark"
+                              />
+
+                          <androidx.constraintlayout.widget.ConstraintLayout
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal">
+
+                              <TextView
+                                  android:id="@+id/group_chat_text_display"
                                   android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
-                                  app:cardCornerRadius="4dp"
-                                  android:layout_marginLeft="5dp"
-                                  android:layout_marginTop="2dp">
+                                  android:inputType="textMultiLine"
+                                  android:maxWidth="200dp"
+                                  android:paddingLeft="8dp"
+                                  android:paddingTop="2dp"
+                                  android:paddingRight="2dp"
+                                  android:paddingBottom="2dp"
+                                  android:text="Puro wey con las asd asd asd asda asd asd asd asd asd asd dfgdfasd asd asd ads asd asd"
+                                  android:textAllCaps="false"
+                                  android:textColor="#000"
+                                  android:textSize="12sp"
+                                  app:layout_constraintBottom_toBottomOf="@+id/message_time"
+                                  app:layout_constraintStart_toStartOf="parent" />
 
-                                  <LinearLayout
-                                      android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:orientation="vertical">
-
-                                      <TextView
-                                          android:id="@+id/user_name"
-                                          android:text="PruebSDSDAAAAAAFSDFa"
-                                          android:textSize="10sp"
-                                          android:textStyle="bold"
-                                          android:layout_width="wrap_content"
-                                          android:layout_height="wrap_content"
-                                          android:paddingLeft="8dp"
-                                          android:textColor="@color/colorPrimaryDark"
-                                          />
-
-                                      <androidx.constraintlayout.widget.ConstraintLayout
-                                          android:layout_width="wrap_content"
-                                          android:layout_height="wrap_content"
-                                          android:orientation="horizontal">
-
-                                          <TextView
-                                              android:id="@+id/group_chat_text_display"
-                                              android:layout_width="wrap_content"
-                                              android:layout_height="wrap_content"
-                                              android:inputType="textMultiLine"
-                                              android:maxWidth="200dp"
-                                              android:paddingLeft="8dp"
-                                              android:paddingTop="2dp"
-                                              android:paddingRight="2dp"
-                                              android:paddingBottom="2dp"
-                                              android:text="Puro wey con las asd asd asd asda asd asd asd asd asd asd dfgdfasd asd asd ads asd asd"
-                                              android:textAllCaps="false"
-                                              android:textColor="#000"
-                                              android:textSize="12sp"
-                                              app:layout_constraintBottom_toBottomOf="@+id/message_time"
-                                              app:layout_constraintStart_toStartOf="parent" />
-
-                                          <TextView
-                                              android:id="@+id/message_time"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="0dp"
-                                              android:layout_marginEnd="7dp"
-                                              android:gravity="bottom"
-                                              android:padding="2dp"
-                                              android:text="10:00 PM"
-                                              android:textAllCaps="false"
-                                              android:textColor="#aaa"
-                                              android:textSize="8sp"
-                                              app:layout_constraintBottom_toBottomOf="parent"
-                                              app:layout_constraintEnd_toEndOf="@+id/group_chat_text_display" />
-                                      </androidx.constraintlayout.widget.ConstraintLayout>
+                              <TextView
+                                  android:id="@+id/message_time"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="0dp"
+                                  android:layout_marginEnd="7dp"
+                                  android:gravity="bottom"
+                                  android:padding="2dp"
+                                  android:text="10:00 PM"
+                                  android:textAllCaps="false"
+                                  android:textColor="#aaa"
+                                  android:textSize="8sp"
+                                  app:layout_constraintBottom_toBottomOf="parent"
+                                  app:layout_constraintEnd_toEndOf="@+id/group_chat_text_display" />
+                          </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                                  </LinearLayout>
+                      </LinearLayout>
 
 
-                              </androidx.cardview.widget.CardView>
-                              -->
+                  </androidx.cardview.widget.CardView>
+-->
 
             </LinearLayout>
         </ScrollView>
@@ -118,6 +119,7 @@
                 android:id="@+id/input_group_message"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="4"
                 android:background="@drawable/background_group_input_text"
                 android:gravity="center_vertical"
@@ -131,7 +133,6 @@
                 android:paddingTop="4dp"
                 android:paddingRight="4dp"
                 android:paddingBottom="4dp"
-                android:layout_margin="5dp"
                 android:textSize="16sp"
                 android:translationZ="5dp" />
 
@@ -139,10 +140,10 @@
                 android:id="@+id/send_message_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:src="@drawable/ic_send_black_24dp"
-                app:rippleColor="@color/colorPrimary"
-                android:layout_margin="5dp"/>
+                app:rippleColor="@color/colorPrimary" />
 
         </LinearLayout>
     </RelativeLayout>

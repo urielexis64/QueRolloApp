@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -244,7 +245,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         TextView txtMessageTime = new TextView(this);
         LinearLayout.MarginLayoutParams txtTimeMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        txtMessageTime.setPadding(2, 2, 6, 0);
+        txtMessageTime.setPadding(2, 4, 4, 0);
         txtMessageTime.setTextSize(11f);
         txtMessageTime.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
         txtTimeMarginParams.setMarginStart(2);
@@ -256,7 +257,14 @@ public class GroupChatActivity extends AppCompatActivity {
         secondaryLinearLayout.addView(txtMessage);
         secondaryLinearLayout.addView(txtMessageTime);
 
-        mainLinearLayout.addView(txtUsername);
+        if(username.equals(currentUserName)){
+            cardView.setCardBackgroundColor(Color.parseColor("#D1FFCE"));
+            cardViewParams.gravity = Gravity.END;
+            cardViewParams.setMargins(0, 0, 15, 20);
+        }else{
+            mainLinearLayout.addView(txtUsername);
+        }
+
         mainLinearLayout.addView(secondaryLinearLayout);
 
         cardView.addView(mainLinearLayout);

@@ -25,4 +25,10 @@
     <string name="verification_code">Código de verificación</string>
     <string name="send_verification_code">Enviar código de verificación</string>
     <string name="verify">Verificar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="chat_requests">Solicitudes</string>
+    <string name="decline_chat_request">RECHAZAR</string>
+    <string name="accept_chat_request">ACEPTAR</string>
 </resources>
