@@ -61,7 +61,7 @@
         android:layout_below="@id/send_message_request_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="6dp"
-        android:background="@drawable/buttons"
+        android:background="@drawable/decline_buttons"
         android:padding="10dp"
         android:text="Cancelar solicitud"
         android:textColor="@color/colorAccent"

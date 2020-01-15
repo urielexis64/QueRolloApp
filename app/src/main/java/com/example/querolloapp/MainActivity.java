@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,8 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -177,5 +174,6 @@ public class MainActivity extends AppCompatActivity {
     private void sendUserToFindFriendsActivity() {
         Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
         startActivity(findFriendsIntent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }

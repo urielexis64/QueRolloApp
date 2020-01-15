@@ -31,4 +31,7 @@
     <string name="chat_requests">Solicitudes</string>
     <string name="decline_chat_request">RECHAZAR</string>
     <string name="accept_chat_request">ACEPTAR</string>
+    <string name="chat_request">Solicitud de amistad</string>
+    <string name="accept">Aceptar</string>
+    <string name="decline">Rechazar</string>
 </resources>

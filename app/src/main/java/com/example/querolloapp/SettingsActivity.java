@@ -3,12 +3,14 @@ package com.example.querolloapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +44,8 @@ public class SettingsActivity extends AppCompatActivity {
     EditText txtStatus;
     @BindView(R.id.profile_image)
     CircleImageView imgProfile;
+    @BindView(R.id.settings_toolbar)
+    Toolbar settingsToolbar;
 
     private String currentUserID;
     private FirebaseAuth mAuth;
@@ -64,6 +68,11 @@ public class SettingsActivity extends AppCompatActivity {
         rootRef = FirebaseDatabase.getInstance().getReference();
         userProfileImagesRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
+
+        setSupportActionBar(settingsToolbar);
+        getSupportActionBar().setTitle(getString(R.string.settings));
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadingBar = new ProgressDialog(this);
         txtUsername.setVisibility(View.INVISIBLE);
 
@@ -125,6 +134,8 @@ public class SettingsActivity extends AppCompatActivity {
                     .setCropMenuCropButtonTitle("Recortar")
                     .setCropShape(CropImageView.CropShape.OVAL)
                     .setOutputCompressQuality(20)
+                    .setMinCropResultSize(200,200)
+                    .setInitialCropWindowPaddingRatio(0)
                     .start(this);
             return;
         }
@@ -167,12 +178,12 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(status)) {
             makeText(this, "Por favor introduce la descripción de tu estado", Toast.LENGTH_SHORT).show();
         } else {
-            HashMap<String, String> profileMap = new HashMap<>();
+            HashMap<String, Object> profileMap = new HashMap<>();
             profileMap.put("uid", currentUserID);
             profileMap.put("name", username);
             profileMap.put("status", status);
 
-            rootRef.child("Users").child(currentUserID).setValue(profileMap).addOnCompleteListener(task -> {
+            rootRef.child("Users").child(currentUserID).updateChildren(profileMap).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     sendUserToMainActivity();
                     makeText(SettingsActivity.this, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show();
@@ -182,7 +193,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
     public void sendUserToMainActivity() {

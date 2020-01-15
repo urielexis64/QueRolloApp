@@ -5,13 +5,14 @@
     android:layout_height="wrap_content"
     android:background="@drawable/recycler_ripple"
     android:clickable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="5dp"
         android:background="#22000000" />
 
     <LinearLayout
@@ -81,8 +82,9 @@
                 android:padding="2dp"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
+                android:focusable="true"
                 android:text="último mensaje"
-                android:textSize="14dp" />
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,21 +98,23 @@
                     android:layout_height="30dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@drawable/buttons"
                     android:text="@string/accept_chat_request"
                     android:textColor="@android:color/background_light"
                     android:textSize="12sp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    android:layout_marginBottom="2dp"/>
 
                 <Button
                     android:id="@+id/btn_request_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:background="#FF4646"
+                    android:background="@drawable/decline_buttons"
                     android:text="@string/decline_chat_request"
                     android:textColor="@android:color/background_light"
                     android:textSize="12sp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    android:layout_marginBottom="2dp"/>
             </LinearLayout>
 
 

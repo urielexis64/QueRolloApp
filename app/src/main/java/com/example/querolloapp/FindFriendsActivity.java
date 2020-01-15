@@ -9,8 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,13 +52,11 @@ public class FindFriendsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Encuentra amigos");
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         FirebaseRecyclerOptions<Contacts> options = new FirebaseRecyclerOptions.Builder<Contacts>().setQuery(usersRef, Contacts.class).build();
 
         FirebaseRecyclerAdapter<Contacts, FindFriendViewHolder> adapter =
@@ -102,5 +103,18 @@ public class FindFriendsActivity extends AppCompatActivity {
             profileImage = itemView.findViewById(R.id.user_profile_image);
             online = itemView.findViewById(R.id.online_image);
         }
+    }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 }

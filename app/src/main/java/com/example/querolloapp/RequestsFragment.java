@@ -1,6 +1,8 @@
 package com.example.querolloapp;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,9 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +37,7 @@ public class RequestsFragment extends Fragment {
     private View requestFragmentView;
     private RecyclerView myRequestList;
 
-    private DatabaseReference chatRequestsRef, usersRef;
+    private DatabaseReference chatRequestsRef, usersRef, contactsRef;
     private FirebaseAuth mAuth;
     private String currentUserId;
 
@@ -50,6 +55,7 @@ public class RequestsFragment extends Fragment {
         currentUserId = mAuth.getCurrentUser().getUid();
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         chatRequestsRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
+        contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
 
         myRequestList = requestFragmentView.findViewById(R.id.chat_requests_list);
         myRequestList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -84,18 +90,71 @@ public class RequestsFragment extends Fragment {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.hasChild("image")) {
-                                                    final String requestUserName = dataSnapshot.child("name").getValue().toString();
-                                                    final String requestUserStatus = dataSnapshot.child("status").getValue().toString();
                                                     final String requestProfileImage = dataSnapshot.child("image").getValue().toString();
                                                     Picasso.get().load(requestProfileImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
-                                                    holder.userName.setText(requestUserName);
-                                                    holder.userStatus.setText(requestUserStatus);
-                                                }else{
-                                                    final String requestUserName = dataSnapshot.child("name").getValue().toString();
-                                                    final String requestUserStatus = dataSnapshot.child("status").getValue().toString();
-                                                    holder.userName.setText(requestUserName);
-                                                    holder.userStatus.setText(requestUserStatus);
                                                 }
+
+                                                final String requestUserName = dataSnapshot.child("name").getValue().toString();
+                                                final String requestUserStatus = dataSnapshot.child("status").getValue().toString();
+
+                                                holder.userName.setText(requestUserName);
+                                                holder.userStatus.setText(requestUserStatus);
+                                                holder.userStatus.setSelected(true);
+
+                                                holder.itemView.setOnClickListener(v -> {
+                                                    CharSequence options[] = new CharSequence[]{
+                                                            getString(R.string.accept), getString(R.string.decline)
+                                                    };
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                    builder.setTitle(requestUserName +" "+ getString(R.string.chat_request));
+                                                    builder.setItems(options, (dialog, i) -> {
+                                                        if (i == 0) {
+                                                            contactsRef.child(currentUserId).child(list_user_id).child("Contact").setValue("Saved").addOnCompleteListener(task -> {
+                                                                if (task.isSuccessful()) {
+                                                                    contactsRef.child(list_user_id).child(currentUserId).child("Contact").setValue("Saved").addOnCompleteListener(task2 -> {
+                                                                        if (task2.isSuccessful()) {
+                                                                            chatRequestsRef.child(currentUserId).child(list_user_id)
+                                                                                    .removeValue()
+                                                                                    .addOnCompleteListener(task3 -> {
+                                                                                        if(task3.isSuccessful()){
+                                                                                            chatRequestsRef.child(list_user_id).child(currentUserId)
+                                                                                                    .removeValue()
+                                                                                                    .addOnCompleteListener(task4 -> {
+                                                                                                        if(task4.isSuccessful()){
+                                                                                                            Snackbar.make(getView(), "Contacto agregado con éxito", Snackbar.LENGTH_LONG).show();
+                                                                                                        }
+
+                                                                                                    });
+
+                                                                                        }
+
+                                                                                    });
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                        } else {
+                                                            chatRequestsRef.child(currentUserId).child(list_user_id)
+                                                                    .removeValue()
+                                                                    .addOnCompleteListener(task3 -> {
+                                                                        if(task3.isSuccessful()){
+                                                                            chatRequestsRef.child(list_user_id).child(currentUserId)
+                                                                                    .removeValue()
+                                                                                    .addOnCompleteListener(task4 -> {
+                                                                                        if(task4.isSuccessful()){
+                                                                                            Snackbar.make(getView(), "Contacto rechazado con éxito", Snackbar.LENGTH_LONG).show();
+                                                                                        }
+
+                                                                                    });
+
+                                                                        }
+
+                                                                    });
+
+                                                        }
+                                                    });
+                                                    builder.show();
+                                                });
 
                                             }
 

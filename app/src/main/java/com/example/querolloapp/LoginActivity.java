@@ -62,18 +62,15 @@ public class LoginActivity extends AppCompatActivity {
             loadingBar.setMessage("Please wait...");
             loadingBar.setCanceledOnTouchOutside(true);
             loadingBar.show();
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        sendUserToMainActivity();
-                        Toast.makeText(LoginActivity.this, "Logged in succesfull!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        String message = task.getException().getMessage();
-                        Toast.makeText(LoginActivity.this, "Error" + message, Toast.LENGTH_SHORT).show();
-                    }
-                    loadingBar.dismiss();
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    sendUserToMainActivity();
+                    Toast.makeText(LoginActivity.this, "Logged in succesfull!", Toast.LENGTH_SHORT).show();
+                } else {
+                    String message = task.getException().getMessage();
+                    Toast.makeText(LoginActivity.this, "Error" + message, Toast.LENGTH_SHORT).show();
                 }
+                loadingBar.dismiss();
             });
         }
 
@@ -100,6 +97,5 @@ public class LoginActivity extends AppCompatActivity {
     public void sendUserToRegisterActivity() {
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(registerIntent);
-        overridePendingTransition(R.anim.zoomenter, R.anim.zoomexit);
     }
 }
