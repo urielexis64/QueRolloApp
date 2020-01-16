@@ -28,7 +28,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/profile_image"
-            android:transitionName="transition_dialog"
+            android:transitionName="@string/transition_dialog"
             app:civ_border_color="@color/colorPrimaryDark"
             app:civ_border_width="1dp" />
 
@@ -85,6 +85,38 @@
                 android:focusable="true"
                 android:text="último mensaje"
                 android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_request_accept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/buttons"
+                    android:text="@string/accept_chat_request"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    android:layout_marginBottom="2dp"/>
+
+                <Button
+                    android:id="@+id/btn_request_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/decline_buttons"
+                    android:text="@string/decline_chat_request"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    android:layout_marginBottom="2dp"/>
+            </LinearLayout>
+
 
         </LinearLayout>
 

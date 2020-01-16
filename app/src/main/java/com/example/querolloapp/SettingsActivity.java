@@ -1,19 +1,19 @@
 package com.example.querolloapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,15 +22,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.widget.Toast.makeText;
 
@@ -43,18 +41,13 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.set_profile_status)
     EditText txtStatus;
     @BindView(R.id.profile_image)
-    CircleImageView imgProfile;
+    ImageView imgProfile;
     @BindView(R.id.settings_toolbar)
     Toolbar settingsToolbar;
 
     private String currentUserID;
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
-
-    private static final int GALLERY_PICK = 1;
-    private StorageReference userProfileImagesRef;
-
-    private ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,107 +59,42 @@ public class SettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         rootRef = FirebaseDatabase.getInstance().getReference();
-        userProfileImagesRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
-
 
         setSupportActionBar(settingsToolbar);
         getSupportActionBar().setTitle(getString(R.string.settings));
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        loadingBar = new ProgressDialog(this);
-        txtUsername.setVisibility(View.INVISIBLE);
 
         btnUpdateAccountSettings.setOnClickListener(v -> updateSettings());
 
         retrieveUserInfo();
 
-        imgProfile.setOnClickListener(v -> {
-            Intent galleryIntent = new Intent();
-            galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-            galleryIntent.setType("image/*");
-            startActivityForResult(galleryIntent, GALLERY_PICK);
-        });
-
+        imgProfile.setOnClickListener(v -> sendUserToUserProfileImageActivity());
     }
 
     private void retrieveUserInfo() {
         rootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.hasChild("name") && dataSnapshot.hasChild("image")) {
-                    String retrieveUserName = dataSnapshot.child("name").getValue().toString();
-                    String retrieveStatus = dataSnapshot.child("status").getValue().toString();
-                    String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
-
-                    txtUsername.setText(retrieveUserName);
-                    txtStatus.setText(retrieveStatus);
-                    Picasso.get().load(retrieveProfileImage).into(imgProfile);
-                } else if (dataSnapshot.exists() && dataSnapshot.hasChild("name")) {
+                if (dataSnapshot.exists() && dataSnapshot.hasChild("name")) {
+                    if (dataSnapshot.hasChild("image")) {
+                        String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
+                        Picasso.get().load(retrieveProfileImage).into(imgProfile);
+                    }
                     String retrieveUserName = dataSnapshot.child("name").getValue().toString();
                     String retrieveStatus = dataSnapshot.child("status").getValue().toString();
 
                     txtUsername.setText(retrieveUserName);
                     txtStatus.setText(retrieveStatus);
                 } else {
-                    txtUsername.setVisibility(View.VISIBLE);
                     makeText(SettingsActivity.this, "Por favor actualiza tu información personal", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK && data != null) {
-
-            Uri imageUri = data.getData();
-
-            CropImage.activity(imageUri)
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1, 1)
-                    .setCropMenuCropButtonTitle("Recortar")
-                    .setCropShape(CropImageView.CropShape.OVAL)
-                    .setOutputCompressQuality(20)
-                    .setMinCropResultSize(200,200)
-                    .setInitialCropWindowPaddingRatio(0)
-                    .start(this);
-            return;
-        }
-
-        CropImage.ActivityResult result = CropImage.getActivityResult(data);
-        if (resultCode == RESULT_OK) {
-            loadingBar.setTitle("Subiendo foto de perfil");
-            loadingBar.setMessage("Por favor, espere...");
-            loadingBar.setCanceledOnTouchOutside(false);
-            loadingBar.show();
-
-            Uri resultUri = result.getUri();
-            StorageReference filePath = userProfileImagesRef.child(currentUserID + ".jpg");
-
-            filePath.putFile(resultUri)
-                    .continueWithTask(task -> {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-                        return filePath.getDownloadUrl();
-                    }).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    makeText(SettingsActivity.this, "Imagen guardada correctamente", Toast.LENGTH_SHORT).show();
-                    Uri downloadUri = task.getResult();
-                    rootRef.child("Users").child(currentUserID).child("image").setValue(downloadUri.toString());
-                } else {
-                    makeText(SettingsActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                loadingBar.dismiss();
-            });
-        }
     }
 
     private void updateSettings() {
@@ -200,5 +128,19 @@ public class SettingsActivity extends AppCompatActivity {
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
+    }
+
+    private void sendUserToUserProfileImageActivity() {
+        Intent previewIntent = new Intent(this, UserProfileImageActivity.class);
+
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this, imgProfile, "settings_transition").toBundle();
+
+        BitmapDrawable bitmapDrawable = ((BitmapDrawable) imgProfile.getDrawable());
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] imageInByte = stream.toByteArray();
+        previewIntent.putExtra("image", imageInByte);
+        startActivity(previewIntent, bundle);
     }
 }

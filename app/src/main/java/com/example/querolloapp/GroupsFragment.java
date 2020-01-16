@@ -106,7 +106,7 @@ public class GroupsFragment extends Fragment implements RecyclerViewClickListene
         if (v instanceof ImageView) {
             Intent intent = new Intent(getContext(), ProfileImagePreviewActivity.class);
 
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), v, getString(R.string.transition_dialog)).toBundle();
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), v, "transition_dialog").toBundle();
 
             BitmapDrawable bitmapDrawable = ((BitmapDrawable) ((ImageView) v).getDrawable());
             Bitmap bitmap = bitmapDrawable.getBitmap();
