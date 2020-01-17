@@ -31,7 +31,7 @@ public class ChatsFragment extends Fragment {
 
     private DatabaseReference chatsRef, usersRef;
     private FirebaseAuth mAuth;
-    private String currentUserId;
+    private String currentUserId, retImage = "default_image";
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -71,7 +71,7 @@ public class ChatsFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             if (dataSnapshot.hasChild("image")) {
-                                final String retImage = dataSnapshot.child("image").getValue().toString();
+                                retImage = dataSnapshot.child("image").getValue().toString();
                                 Picasso.get().load(retImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
                             }
 
@@ -85,7 +85,7 @@ public class ChatsFragment extends Fragment {
                                 Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                 chatIntent.putExtra("visit_user_id", usersIds);
                                 chatIntent.putExtra("visit_user_name", retName);
-
+                                chatIntent.putExtra("visit_user_image", retImage);
                                 startActivity(chatIntent);
                             });
                         }

@@ -25,8 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/my_linear_layout"
-            android:layout_below="@id/group_chat_bar_layout"
-            android:scrollbarStyle="outsideOverlay">
+            android:layout_below="@id/group_chat_bar_layout">
 
             <LinearLayout
                 android:id="@+id/layout"

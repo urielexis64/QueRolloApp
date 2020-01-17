@@ -48,6 +48,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private DatabaseReference usersRef, groupNameRef, groupMessageKeyRef;
 
     private String currentGroupName, currentUserId, currentUserName, currentDate, currentTime;
+    private boolean swipeFinish = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,18 @@ public class GroupChatActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        swipeFinish = false;
+        finish();
+    }
+
+    public void finish() {
+        super.finish();
+        if (swipeFinish)
+            overridePendingTransition(0, 0);
+    }
+
     private void getUserInfo() {
         usersRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -196,7 +209,7 @@ public class GroupChatActivity extends AppCompatActivity {
             txtDate.setPadding(10, 10, 10, 10);
             txtDate.setTextSize(14);
             txtDate.setAllCaps(true);
-            txtDate.setBackground(ContextCompat.getDrawable(this,R.drawable.background_group_date_text));
+            txtDate.setBackground(ContextCompat.getDrawable(this, R.drawable.background_group_date_text));
             txtDate.setText(date);
             parentLayout.addView(txtDate);
         }
@@ -215,7 +228,7 @@ public class GroupChatActivity extends AppCompatActivity {
         TextView txtUsername = new TextView(this);
         LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textViewParams.setMargins(4, 0, 4, 0);
-        txtUsername.setTextColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        txtUsername.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         txtUsername.setTextSize(12f);
         txtUsername.setTypeface(Typeface.DEFAULT_BOLD);
         txtUsername.setText(username);
@@ -235,7 +248,7 @@ public class GroupChatActivity extends AppCompatActivity {
         txtMessage.setPadding(0, 2, 2, 2);
         txtMessage.setMaxWidth(350);
         txtMessage.setTextSize(14f);
-        txtMessage.setTextColor(ContextCompat.getColor(this,android.R.color.background_dark));
+        txtMessage.setTextColor(ContextCompat.getColor(this, android.R.color.background_dark));
         txtMessage.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         txtMessage.setSingleLine(false);
         LinearLayout.MarginLayoutParams txtMarginParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -256,11 +269,11 @@ public class GroupChatActivity extends AppCompatActivity {
         secondaryLinearLayout.addView(txtMessage);
         secondaryLinearLayout.addView(txtMessageTime);
 
-        if(username.equals(currentUserName)){
+        if (username.equals(currentUserName)) {
             cardView.setCardBackgroundColor(Color.parseColor("#D1FFCE"));
             cardViewParams.gravity = Gravity.END;
             cardViewParams.setMargins(0, 0, 15, 20);
-        }else{
+        } else {
             mainLinearLayout.addView(txtUsername);
         }
 

@@ -15,9 +15,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".UserProfileImageActivity"
-            android:theme="@style/Theme.Swipe.Back.NoActionBar"
-            android:parentActivityName=".SettingsActivity"></activity>
-        <activity android:name=".ChatActivity" />
+            android:parentActivityName=".SettingsActivity"
+            android:theme="@style/Theme.Swipe.Back.NoActionBar"></activity>
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/Theme.Swipe.Back.NoActionBar" />/>
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".FindFriendsActivity"
@@ -30,8 +32,7 @@
             android:theme="@style/AppTheme.Transparent" />
         <activity
             android:name=".GroupChatActivity"
-            android:theme="@style/Theme.Swipe.Back.NoActionBar"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:theme="@style/Theme.Swipe.Back.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity" />
