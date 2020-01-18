@@ -108,41 +108,88 @@
         <LinearLayout
             android:id="@+id/my_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
+            android:gravity="bottom"
             android:orientation="horizontal"
-            android:weightSum="5">
+            android:weightSum="30">
 
-            <EditText
-                android:id="@+id/input_group_message"
-                android:layout_width="300dp"
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="4"
-                android:background="@drawable/background_group_input_text"
-                android:gravity="center_vertical"
-                android:hint="@string/type_a_message"
-                android:inputType="textCapSentences|textMultiLine"
-                android:maxHeight="300dp"
-                android:maxLength="2000"
-                android:maxLines="8"
-                android:minHeight="50dp"
-                android:paddingLeft="14dp"
-                android:paddingTop="4dp"
-                android:paddingRight="4dp"
-                android:paddingBottom="4dp"
-                android:textSize="16sp"
-                android:translationZ="5dp" />
+                android:layout_weight="26"
+                app:cardCornerRadius="20dp">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:weightSum="8">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageButton
+                            android:id="@+id/emoji"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/icons_ripple"
+                            android:src="@drawable/ic_emoji" />
+                    </LinearLayout>
+
+
+                    <EditText
+                        android:id="@+id/input_group_message"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="6"
+                        android:background="#00000000"
+                        android:hint="@string/type_a_message"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLength="2000"
+                        android:maxLines="6"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="vertical"
+                        android:textColorHighlight="#18DD7D"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom">
+
+                        <ImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/icons_ripple"
+                            android:src="@drawable/ic_attach_file" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageButton
                 android:id="@+id/send_message_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_send_black_24dp"
-                app:rippleColor="@color/colorPrimary" />
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="3.8"
+                android:background="@drawable/chat_ripple"
+                android:padding="1dp"
+                android:src="@drawable/ic_send" />
 
         </LinearLayout>
     </RelativeLayout>

@@ -65,7 +65,7 @@
         android:text="@string/send_verification_code"
         android:textColor="#fff"
         app:cornerRadius="20dp"
-        app:icon="@drawable/ic_send_black_24dp"
+        app:icon="@drawable/ic_send"
         app:rippleColor="@color/colorAccent"
         android:layout_alignParentEnd="true"/>
 
