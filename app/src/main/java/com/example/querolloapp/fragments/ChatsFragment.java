@@ -1,9 +1,11 @@
-package com.example.querolloapp;
+package com.example.querolloapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.querolloapp.activities.ChatActivity;
+import com.example.querolloapp.entities.Contacts;
+import com.example.querolloapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsFragment extends Fragment {
@@ -31,7 +37,7 @@ public class ChatsFragment extends Fragment {
 
     private DatabaseReference chatsRef, usersRef;
     private FirebaseAuth mAuth;
-    private String currentUserId, retImage = "default_image";
+    private String currentUserId;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -70,6 +76,7 @@ public class ChatsFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
+                            String retImage = "default_image";
                             if (dataSnapshot.hasChild("image")) {
                                 retImage = dataSnapshot.child("image").getValue().toString();
                                 Picasso.get().load(retImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
@@ -81,12 +88,18 @@ public class ChatsFragment extends Fragment {
                             holder.userName.setText(retName);
                             holder.userStatus.setText(retStatus);
 
+                            String finalRetImage = retImage;
                             holder.itemView.setOnClickListener(view -> {
                                 Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                Pair<View, String> p1 = Pair.create(holder.profileImage, "profile_image_shared");
+                                Pair<View, String> p2 = Pair.create(holder.userName, "user_name_shared");
+                                Pair<View, String> p3 = Pair.create(holder.userStatus, "status_shared");
+                                ActivityOptionsCompat options = ActivityOptionsCompat.
+                                        makeSceneTransitionAnimation(getActivity(), p1, p2, p3);
                                 chatIntent.putExtra("visit_user_id", usersIds);
                                 chatIntent.putExtra("visit_user_name", retName);
-                                chatIntent.putExtra("visit_user_image", retImage);
-                                startActivity(chatIntent);
+                                chatIntent.putExtra("visit_user_image", finalRetImage);
+                                startActivity(chatIntent, options.toBundle());
                             });
                         }
                     }

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.decline_message_request_button)
     Button btnDeclineRequest;
 
-    private DatabaseReference userRef, chatRequestRef, contactsRef;
+    private DatabaseReference userRef, chatRequestRef, contactsRef, notificationRef;
     private FirebaseAuth mAtuh;
 
     @Override
@@ -48,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
         chatRequestRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
+        notificationRef= FirebaseDatabase.getInstance().getReference().child("Notifications");
 
         currentState = "new";
         senderUserId = mAtuh.getCurrentUser().getUid();
@@ -220,9 +225,21 @@ public class ProfileActivity extends AppCompatActivity {
                         chatRequestRef.child(receiverUserId).child(senderUserId)
                                 .child("request_type").setValue("received")
                                 .addOnCompleteListener(task1 -> {
-                                    btnSendMessageRequest.setEnabled(true);
-                                    currentState = "request_sent";
-                                    btnSendMessageRequest.setText("Cancelar solicitud");
+                                    HashMap<String, String> chatNotificationMap = new HashMap<>();
+                                    chatNotificationMap.put("from", senderUserId);
+                                    chatNotificationMap.put("type", "request");
+
+                                    notificationRef.child(receiverUserId).push()
+                                            .setValue(chatNotificationMap)
+                                    .addOnCompleteListener(task2 -> {
+                                        if(task.isSuccessful()){
+                                            btnSendMessageRequest.setEnabled(true);
+                                            currentState = "request_sent";
+                                            btnSendMessageRequest.setText("Cancelar solicitud");
+                                        }
+                                    });
+
+
                                 });
                     }
                 });

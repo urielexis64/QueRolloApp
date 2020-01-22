@@ -2,12 +2,32 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">#006257</item>
+        <item name="colorPrimaryDark">#005048</item>
+        <item name="colorPrimaryLight">#009080</item>
+        <item name="colorAccent">#E6E6E6</item>
+        <item name="backgroundColor">#fcfcfc</item>
+        <item name="cardBackground">#fff</item>
+        <item name="textColor">#808080</item>
+        <item name="tintColor">#000</item>
+        <item name="buttonColor">#fff</item>
+        <item name="android:windowAnimationStyle">@style/windowAnimationTransition</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
+
+    <style name="dark_theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#035047</item>
+        <item name="colorPrimaryDark">#00302A</item>
+        <item name="colorPrimaryLight">#00423A</item>
+        <item name="colorAccent">#E6E6E6</item>
+        <item name="backgroundColor">#303030</item>
+        <item name="cardBackground">#424242</item>
+        <item name="textColor">#fff</item>
+        <item name="tintColor">#fff</item>
+        <item name="buttonColor">#fff</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
 
     <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="windowActionBar">false</item>
@@ -26,6 +46,11 @@
     <style name="Theme.Swipe.Back.NoActionBar" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="windowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
 </resources>

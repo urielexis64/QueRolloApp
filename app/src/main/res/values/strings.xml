@@ -34,4 +34,7 @@
     <string name="chat_request">Solicitud de amistad</string>
     <string name="accept">Aceptar</string>
     <string name="decline">Rechazar</string>
+    <string name="profile_image_shared">profile_image_shared</string>
+    <string name="user_name_shared">user_name_shared</string>
+    <string name="status_shared">status_shared</string>
 </resources>

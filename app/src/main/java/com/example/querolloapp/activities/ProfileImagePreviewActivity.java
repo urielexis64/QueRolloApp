@@ -1,4 +1,4 @@
-package com.example.querolloapp;
+package com.example.querolloapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +11,8 @@ import android.transition.ChangeBounds;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.querolloapp.R;
 
 public class ProfileImagePreviewActivity extends AppCompatActivity {
 

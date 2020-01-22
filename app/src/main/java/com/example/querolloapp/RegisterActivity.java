@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.querolloapp.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextView lblAlreadyHaveAccount;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference rootReference;
+    private DatabaseReference rootRef;
     private ProgressDialog loadingBar;
 
     @Override
@@ -40,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         loadingBar = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
-        rootReference = FirebaseDatabase.getInstance().getReference();
+        rootRef = FirebaseDatabase.getInstance().getReference();
 
         lblAlreadyHaveAccount.setOnClickListener(view -> sendUserToLoginActivity());
         btnCreateAccount.setOnClickListener(view -> createNewAccount());
@@ -63,8 +65,11 @@ public class RegisterActivity extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            String deviceToken = FirebaseInstanceId.getInstance().getToken();
                             String currentUserID = mAuth.getCurrentUser().getUid();
-                            rootReference.child("Users").child(currentUserID).setValue("");
+
+                            rootRef.child("Users").child(currentUserID).setValue("");
+                            rootRef.child("Users").child(currentUserID).child("device_token").setValue(deviceToken);
 
                             sendUserToMainActivity();
                             Toast.makeText(RegisterActivity.this, "Account created succesfully!", Toast.LENGTH_SHORT).show();

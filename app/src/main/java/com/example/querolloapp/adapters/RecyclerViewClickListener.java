@@ -1,8 +1,6 @@
-package com.example.querolloapp;
+package com.example.querolloapp.adapters;
 
 import android.view.View;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 public interface RecyclerViewClickListener {
 

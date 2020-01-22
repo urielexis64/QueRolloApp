@@ -1,8 +1,7 @@
-package com.example.querolloapp;
+package com.example.querolloapp.fragments;
 
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,10 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.querolloapp.entities.Contacts;
+import com.example.querolloapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -99,58 +98,20 @@ public class RequestsFragment extends Fragment {
 
                                                 holder.userName.setText(requestUserName);
                                                 holder.userStatus.setText(requestUserStatus);
-                                                holder.userStatus.setSelected(true);
+                                                holder.btnAccept.setOnClickListener(v -> acceptRequest(list_user_id));
+                                                holder.btnCancel.setOnClickListener(v -> declineRequest(list_user_id));
 
                                                 holder.itemView.setOnClickListener(v -> {
                                                     CharSequence options[] = new CharSequence[]{
                                                             getString(R.string.accept), getString(R.string.decline)
                                                     };
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle(requestUserName +" "+ getString(R.string.chat_request));
+                                                    builder.setTitle(requestUserName + " " + getString(R.string.chat_request));
                                                     builder.setItems(options, (dialog, i) -> {
                                                         if (i == 0) {
-                                                            contactsRef.child(currentUserId).child(list_user_id).child("Contact").setValue("Saved").addOnCompleteListener(task -> {
-                                                                if (task.isSuccessful()) {
-                                                                    contactsRef.child(list_user_id).child(currentUserId).child("Contact").setValue("Saved").addOnCompleteListener(task2 -> {
-                                                                        if (task2.isSuccessful()) {
-                                                                            chatRequestsRef.child(currentUserId).child(list_user_id)
-                                                                                    .removeValue()
-                                                                                    .addOnCompleteListener(task3 -> {
-                                                                                        if(task3.isSuccessful()){
-                                                                                            chatRequestsRef.child(list_user_id).child(currentUserId)
-                                                                                                    .removeValue()
-                                                                                                    .addOnCompleteListener(task4 -> {
-                                                                                                        if(task4.isSuccessful()){
-                                                                                                            Snackbar.make(getView(), "Contacto agregado con éxito", Snackbar.LENGTH_LONG).show();
-                                                                                                        }
-
-                                                                                                    });
-
-                                                                                        }
-
-                                                                                    });
-                                                                        }
-                                                                    });
-                                                                }
-                                                            });
+                                                            acceptRequest(list_user_id);
                                                         } else {
-                                                            chatRequestsRef.child(currentUserId).child(list_user_id)
-                                                                    .removeValue()
-                                                                    .addOnCompleteListener(task3 -> {
-                                                                        if(task3.isSuccessful()){
-                                                                            chatRequestsRef.child(list_user_id).child(currentUserId)
-                                                                                    .removeValue()
-                                                                                    .addOnCompleteListener(task4 -> {
-                                                                                        if(task4.isSuccessful()){
-                                                                                            Snackbar.make(getView(), "Contacto rechazado con éxito", Snackbar.LENGTH_LONG).show();
-                                                                                        }
-
-                                                                                    });
-
-                                                                        }
-
-                                                                    });
-
+                                                            declineRequest(list_user_id);
                                                         }
                                                     });
                                                     builder.show();
@@ -184,6 +145,52 @@ public class RequestsFragment extends Fragment {
                 };
         myRequestList.setAdapter(adapter);
         adapter.startListening();
+    }
+
+    private void acceptRequest(String list_user_id) {
+        contactsRef.child(currentUserId).child(list_user_id).child("Contact").setValue("Saved").addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                contactsRef.child(list_user_id).child(currentUserId).child("Contact").setValue("Saved").addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+                        chatRequestsRef.child(currentUserId).child(list_user_id)
+                                .removeValue()
+                                .addOnCompleteListener(task3 -> {
+                                    if (task3.isSuccessful()) {
+                                        chatRequestsRef.child(list_user_id).child(currentUserId)
+                                                .removeValue()
+                                                .addOnCompleteListener(task4 -> {
+                                                    if (task4.isSuccessful()) {
+                                                        Snackbar.make(getView(), "Contacto agregado con éxito", Snackbar.LENGTH_LONG).show();
+                                                    }
+
+                                                });
+
+                                    }
+
+                                });
+                    }
+                });
+            }
+        });
+    }
+
+    private void declineRequest(String list_user_id) {
+        chatRequestsRef.child(currentUserId).child(list_user_id)
+                .removeValue()
+                .addOnCompleteListener(task3 -> {
+                    if (task3.isSuccessful()) {
+                        chatRequestsRef.child(list_user_id).child(currentUserId)
+                                .removeValue()
+                                .addOnCompleteListener(task4 -> {
+                                    if (task4.isSuccessful()) {
+                                        Snackbar.make(getView(), "Contacto rechazado con éxito", Snackbar.LENGTH_LONG).show();
+                                    }
+
+                                });
+
+                    }
+
+                });
     }
 
     public static class RequestsViewHolder extends RecyclerView.ViewHolder {

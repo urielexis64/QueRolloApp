@@ -1,4 +1,4 @@
-package com.example.querolloapp;
+package com.example.querolloapp.fragments;
 
 
 import android.content.Intent;
@@ -17,6 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.querolloapp.activities.GroupChatActivity;
+import com.example.querolloapp.activities.ProfileImagePreviewActivity;
+import com.example.querolloapp.R;
+import com.example.querolloapp.adapters.RecyclerViewAdapter;
+import com.example.querolloapp.adapters.RecyclerViewClickListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -106,7 +111,7 @@ public class GroupsFragment extends Fragment implements RecyclerViewClickListene
         if (v instanceof ImageView) {
             Intent intent = new Intent(getContext(), ProfileImagePreviewActivity.class);
 
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), v, "transition_dialog").toBundle();
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), v, "profile_image_shared").toBundle();
 
             BitmapDrawable bitmapDrawable = ((BitmapDrawable) ((ImageView) v).getDrawable());
             Bitmap bitmap = bitmapDrawable.getBitmap();

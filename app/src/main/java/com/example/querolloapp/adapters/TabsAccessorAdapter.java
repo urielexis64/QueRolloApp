@@ -1,10 +1,15 @@
-package com.example.querolloapp;
+package com.example.querolloapp.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.example.querolloapp.fragments.ChatsFragment;
+import com.example.querolloapp.fragments.ContactsFragment;
+import com.example.querolloapp.fragments.GroupsFragment;
+import com.example.querolloapp.fragments.RequestsFragment;
 
 public class TabsAccessorAdapter extends FragmentStatePagerAdapter {
 

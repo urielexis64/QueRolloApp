@@ -1,4 +1,4 @@
-package com.example.querolloapp;
+package com.example.querolloapp.entities;
 
 public class Contacts {
 

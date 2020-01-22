@@ -1,4 +1,4 @@
-package com.example.querolloapp;
+package com.example.querolloapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,18 +10,24 @@ import androidx.core.content.ContextCompat;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.querolloapp.animations.MyBounceInterpolator;
+import com.example.querolloapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +46,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private EditText txtMessage;
-    private FloatingActionButton btnSendMessage;
+    private ImageButton btnSend;
     private ScrollView scrollView;
     private LinearLayout parentLayout;
 
@@ -48,7 +54,9 @@ public class GroupChatActivity extends AppCompatActivity {
     private DatabaseReference usersRef, groupNameRef, groupMessageKeyRef;
 
     private String currentGroupName, currentUserId, currentUserName, currentDate, currentTime;
-    private boolean swipeFinish = true;
+    private boolean oneCharacter = true, swipeFinish = true;
+
+    private Animation myAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +71,12 @@ public class GroupChatActivity extends AppCompatActivity {
         groupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName);
 
         initializeFields();
+        initializeInputChat();
         getUserInfo();
 
         scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
 
-        btnSendMessage.setOnClickListener(v -> {
+        btnSend.setOnClickListener(v -> {
             saveMessageInfoToDataBase();
             txtMessage.setText("");
         });
@@ -114,8 +123,8 @@ public class GroupChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        txtMessage = findViewById(R.id.input_group_message);
-        btnSendMessage = findViewById(R.id.send_message_button);
+        txtMessage = findViewById(R.id.input_message);
+        btnSend = findViewById(R.id.send_message_button);
         scrollView = findViewById(R.id.my_scroll_view);
         parentLayout = findViewById(R.id.layout);
     }
@@ -220,6 +229,11 @@ public class GroupChatActivity extends AppCompatActivity {
         cardView.setLayoutParams(cardViewParams);
         cardView.setRadius(15f);
         cardView.setCardElevation(5f);
+        cardView.setOnLongClickListener(v -> {
+            cardView.setSelected(true);
+            cardView.setBackgroundColor(Color.parseColor("#2222FF"));
+            return false;
+        });
 
         LinearLayout mainLinearLayout = new LinearLayout(this);
         mainLinearLayout.setLayoutParams(cardViewParams);
@@ -284,4 +298,49 @@ public class GroupChatActivity extends AppCompatActivity {
         return cardView;
     }
 
+    private void initializeInputChat() {
+        myAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce_animation);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.3, 5);
+        myAnim.setInterpolator(interpolator);
+
+        txtMessage = findViewById(R.id.input_message);
+        btnSend = findViewById(R.id.send_message_button);
+        findViewById(R.id.emoji).setTag(false);
+
+        txtMessage.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String text = txtMessage.getText().toString();
+                if (TextUtils.isEmpty(text.trim())) {
+                    btnSend.setImageResource(R.drawable.ic_mic);
+                    if (text.equals("") && !oneCharacter) {
+                        btnSend.startAnimation(myAnim);
+                        oneCharacter = true;
+                    }
+                } else {
+                    btnSend.setImageResource(R.drawable.ic_send);
+                    if (text.length() == 1 && oneCharacter) {
+                        oneCharacter = false;
+                        btnSend.startAnimation(myAnim);
+                    }
+                }
+            }
+
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    public void emojiAction(View view) {
+        ImageButton btnEmoji = (ImageButton) view;
+        if (!((boolean) btnEmoji.getTag())) {
+            btnEmoji.setImageResource(R.drawable.ic_keyboard);
+            btnEmoji.setTag(true);
+        } else {
+            btnEmoji.setImageResource(R.drawable.ic_emoji);
+            btnEmoji.setTag(false);
+        }
+    }
 }

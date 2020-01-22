@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:onClick="finishDialog"
-    tools:context=".ProfileImagePreviewActivity">
+    tools:context=".activities.ProfileImagePreviewActivity">
 
 
     <ImageView
@@ -14,7 +14,7 @@
         android:layout_width="200dp"
         android:layout_height="0dp"
         android:src="@drawable/profile_image"
-        android:transitionName="@string/transition_dialog"
+        android:transitionName="@string/profile_image_shared"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +29,7 @@
         android:padding="12dp"
         android:text="Group name"
         android:textColor="#fff"
+        android:transitionName="@string/user_name_shared"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

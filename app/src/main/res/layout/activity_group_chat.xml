@@ -9,7 +9,7 @@
     app:isSwipeFromEdge="true"
     app:maskAlpha="180"
     app:swipeBackFactor="0.5"
-    tools:context=".GroupChatActivity">
+    tools:context=".activities.GroupChatActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -111,16 +111,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
+            android:layout_margin="1dp"
             android:gravity="bottom"
             android:orientation="horizontal"
+            android:padding="2dp"
             android:weightSum="30">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="26"
-                app:cardCornerRadius="20dp">
+                android:layout_margin="4dp"
+                android:layout_weight="25.8"
+                app:cardCornerRadius="25dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -132,31 +134,35 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="bottom">
+                        android:layout_weight="1.1"
+                        android:gravity="bottom"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingBottom="6dp">
 
                         <ImageButton
                             android:id="@+id/emoji"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="36dp"
                             android:background="@drawable/icons_ripple"
+                            android:onClick="emojiAction"
                             android:src="@drawable/ic_emoji" />
                     </LinearLayout>
 
 
                     <EditText
-                        android:id="@+id/input_group_message"
+                        android:id="@+id/input_message"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="6"
+                        android:layout_weight="4.8"
                         android:background="#00000000"
                         android:hint="@string/type_a_message"
                         android:inputType="textCapSentences|textMultiLine"
                         android:maxLength="2000"
                         android:maxLines="6"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
                         android:scrollbarStyle="outsideInset"
                         android:scrollbars="vertical"
                         android:textColorHighlight="#18DD7D"
@@ -165,16 +171,29 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="bottom">
+                        android:layout_weight="2.1"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingBottom="6dp"
+                        android:weightSum="2">
 
                         <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
                             android:background="@drawable/icons_ripple"
                             android:src="@drawable/ic_attach_file" />
-                    </LinearLayout>
 
+                        <ImageButton
+                            android:id="@+id/camera_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/icons_ripple"
+                            android:src="@drawable/ic_camera" />
+                    </LinearLayout>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -182,14 +201,13 @@
             <ImageButton
                 android:id="@+id/send_message_button"
                 android:layout_width="0dp"
-                android:layout_height="44dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginBottom="5dp"
-                android:layout_weight="3.8"
+                android:layout_weight="4.2"
                 android:background="@drawable/chat_ripple"
-                android:padding="1dp"
-                android:src="@drawable/ic_send" />
+                android:src="@drawable/ic_mic" />
 
         </LinearLayout>
     </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.querolloapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
@@ -11,10 +12,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.querolloapp.activities.LoginActivity;
+import com.example.querolloapp.adapters.TabsAccessorAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         myTabLayout = findViewById(R.id.main_tabs);
         myTabLayout.setupWithViewPager(myViewPager);
         myTabLayout.getTabAt(3).setIcon(R.drawable.add_user);
-        LinearLayout layout = (LinearLayout)((LinearLayout) myTabLayout.getChildAt(0)).getChildAt(3);
+        LinearLayout layout = (LinearLayout) ((LinearLayout) myTabLayout.getChildAt(0)).getChildAt(3);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
         layoutParams.weight = .6f;
         layout.setLayoutParams(layoutParams);
@@ -66,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         if (currentUser == null) {
             sendUserToLoginActivity();
         } else {
@@ -123,14 +126,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.main_find_friends_option) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.main_find_friends_option) {
             sendUserToFindFriendsActivity();
-        } else if (item.getItemId() == R.id.main_settings_option) {
+        } else if (itemId == R.id.main_settings_option) {
             sendUserToSettingsActivity();
-        } else if (item.getItemId() == R.id.main_logout_option) {
+        } else if (itemId == R.id.main_logout_option) {
             mAuth.signOut();
             sendUserToLoginActivity();
-        } else if (item.getItemId() == R.id.main_create_group_option) {
+        } else if (itemId == R.id.main_create_group_option) {
             requestNewGroup();
         }
         return true;
