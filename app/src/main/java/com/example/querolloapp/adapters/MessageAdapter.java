@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public CardView receiverCard, senderCard;
         public TextView senderMessageText, receiverMessageText, senderTime, receiverTime;
         public RelativeLayout mainLayout;
+        public ImageView check;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -50,6 +52,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             receiverCard = itemView.findViewById(R.id.card1);
             senderCard = itemView.findViewById(R.id.card2);
             mainLayout = itemView.findViewById(R.id.main_layout);
+            check = itemView.findViewById(R.id.check);
         }
     }
 
@@ -118,6 +121,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             if (fromUserID.equals(messageSenderId)) {
                 messageViewHolder.mainLayout.setGravity(Gravity.END);
                 messageViewHolder.senderCard.setVisibility(View.VISIBLE);
+                messageViewHolder.check.setImageResource(R.drawable.ic_double_check);
 
                 messageViewHolder.senderMessageText.setText(messages.getMessage());
                 messageViewHolder.senderTime.setText("10:00 a. m.");

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.querolloapp.activities.ChatActivity;
@@ -86,7 +87,21 @@ public class ChatsFragment extends Fragment {
                             final String retStatus = dataSnapshot.child("status").getValue().toString();
 
                             holder.userName.setText(retName);
-                            holder.userStatus.setText(retStatus);
+
+                            if (dataSnapshot.child("userState").hasChild("state")) {
+                                String state = dataSnapshot.child("userState").child("state").getValue().toString();
+                                String date = dataSnapshot.child("userState").child("date").getValue().toString();
+                                String time = dataSnapshot.child("userState").child("time").getValue().toString();
+                                if (state.equals("online")) {
+                                    holder.userStatus.setText("online");
+                                    holder.userState.setVisibility(View.VISIBLE);
+                                } else {
+                                    holder.userStatus.setText("últ. vez " + date + " a las " + time);
+                                    holder.userState.setVisibility(View.INVISIBLE);
+                                }
+                            } else {
+                                holder.userStatus.setText("offline");
+                            }
 
                             String finalRetImage = retImage;
                             holder.itemView.setOnClickListener(view -> {
@@ -125,6 +140,7 @@ public class ChatsFragment extends Fragment {
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView profileImage;
+        ImageView userState;
         TextView userStatus, userName;
 
         public ChatViewHolder(@NonNull View itemView) {
@@ -133,6 +149,7 @@ public class ChatsFragment extends Fragment {
             profileImage = itemView.findViewById(R.id.user_profile_image);
             userName = itemView.findViewById(R.id.user_profile_name);
             userStatus = itemView.findViewById(R.id.user_profile_status);
+            userState = itemView.findViewById(R.id.userState);
         }
     }
 }

@@ -91,7 +91,6 @@ public class FindFriendsActivity extends AppCompatActivity {
 
         TextView userName, userStatus;
         CircleImageView profileImage;
-        ImageView online;
 
         FindFriendViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,7 +98,6 @@ public class FindFriendsActivity extends AppCompatActivity {
             userName = itemView.findViewById(R.id.user_profile_name);
             userStatus = itemView.findViewById(R.id.user_profile_status);
             profileImage = itemView.findViewById(R.id.user_profile_image);
-            online = itemView.findViewById(R.id.online_image);
         }
     }
 

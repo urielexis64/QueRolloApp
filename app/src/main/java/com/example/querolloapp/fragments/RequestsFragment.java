@@ -99,7 +99,7 @@ public class RequestsFragment extends Fragment {
                                                 holder.userName.setText(requestUserName);
                                                 holder.userStatus.setText(requestUserStatus);
                                                 holder.btnAccept.setOnClickListener(v -> acceptRequest(list_user_id));
-                                                holder.btnCancel.setOnClickListener(v -> declineRequest(list_user_id));
+                                                holder.btnCancel.setOnClickListener(v -> declineRequest(list_user_id, false));
 
                                                 holder.itemView.setOnClickListener(v -> {
                                                     CharSequence options[] = new CharSequence[]{
@@ -111,7 +111,7 @@ public class RequestsFragment extends Fragment {
                                                         if (i == 0) {
                                                             acceptRequest(list_user_id);
                                                         } else {
-                                                            declineRequest(list_user_id);
+                                                            declineRequest(list_user_id, false);
                                                         }
                                                     });
                                                     builder.show();
@@ -124,16 +124,52 @@ public class RequestsFragment extends Fragment {
 
                                             }
                                         });
+                                    } else if (type.equals("sent")) {
+                                        Button requestBtn = holder.itemView.findViewById(R.id.btn_request_accept);
+                                        requestBtn.setText("Solicitud enviada");
+
+                                        holder.itemView.findViewById(R.id.btn_request_cancel).setVisibility(View.GONE);
+
+                                        usersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.hasChild("image")) {
+                                                    final String requestProfileImage = dataSnapshot.child("image").getValue().toString();
+                                                    Picasso.get().load(requestProfileImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
+                                                }
+
+                                                final String requestUserName = dataSnapshot.child("name").getValue().toString();
+
+                                                holder.userName.setText(requestUserName);
+                                                holder.userStatus.setText("Enviaste una solicitud a " + requestUserName);
+
+                                                holder.itemView.setOnClickListener(v -> {
+                                                    CharSequence options[] = new CharSequence[]{
+                                                            getString(android.R.string.cancel)
+                                                    };
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                    builder.setTitle("Solicitud enviada");
+                                                    builder.setItems(options, (dialog, i) -> {
+                                                        if (i == 0) {
+                                                            declineRequest(list_user_id, true);
+                                                        }
+                                                    });
+                                                    builder.show();
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            }
+                                        });
                                     }
                                 }
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
                             }
                         });
-
                     }
 
                     @NonNull
@@ -162,11 +198,8 @@ public class RequestsFragment extends Fragment {
                                                     if (task4.isSuccessful()) {
                                                         Snackbar.make(getView(), "Contacto agregado con éxito", Snackbar.LENGTH_LONG).show();
                                                     }
-
                                                 });
-
                                     }
-
                                 });
                     }
                 });
@@ -174,7 +207,7 @@ public class RequestsFragment extends Fragment {
         });
     }
 
-    private void declineRequest(String list_user_id) {
+    private void declineRequest(String list_user_id, boolean request) {
         chatRequestsRef.child(currentUserId).child(list_user_id)
                 .removeValue()
                 .addOnCompleteListener(task3 -> {
@@ -183,13 +216,13 @@ public class RequestsFragment extends Fragment {
                                 .removeValue()
                                 .addOnCompleteListener(task4 -> {
                                     if (task4.isSuccessful()) {
-                                        Snackbar.make(getView(), "Contacto rechazado con éxito", Snackbar.LENGTH_LONG).show();
+                                        if (request)
+                                            Snackbar.make(getView(), "Solicitud cancelada", Snackbar.LENGTH_LONG).show();
+                                        else
+                                            Snackbar.make(getView(), "Solicitud rechazada", Snackbar.LENGTH_LONG).show();
                                     }
-
                                 });
-
                     }
-
                 });
     }
 

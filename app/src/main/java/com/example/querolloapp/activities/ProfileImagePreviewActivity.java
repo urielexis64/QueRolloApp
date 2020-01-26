@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.querolloapp.R;
+import com.squareup.picasso.Picasso;
 
 public class ProfileImagePreviewActivity extends AppCompatActivity {
 
@@ -28,13 +29,13 @@ public class ProfileImagePreviewActivity extends AppCompatActivity {
 
         image = findViewById(R.id.profile_group_image);
 
-        if(getIntent().hasExtra("byteArray")) {
+        if (getIntent().hasExtra("byteArray")) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(
                     getIntent().getByteArrayExtra("byteArray"), 0, getIntent().getByteArrayExtra("byteArray").length);
             image.setImageBitmap(bitmap);
         }
 
-        ((TextView)findViewById(R.id.group_name)).setText(getIntent().getStringExtra("group_name"));
+        ((TextView) findViewById(R.id.group_name)).setText(getIntent().getStringExtra("group_name"));
     }
 
     @Override

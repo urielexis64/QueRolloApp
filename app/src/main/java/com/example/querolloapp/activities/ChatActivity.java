@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,10 +16,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -26,13 +29,13 @@ import com.example.querolloapp.adapters.MessageAdapter;
 import com.example.querolloapp.animations.MyBounceInterpolator;
 import com.example.querolloapp.R;
 import com.example.querolloapp.entities.Messages;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText txtMessage;
     private ImageButton btnSend;
 
-    private Animation myAnim;
+    private Animation buttonAnim;
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
 
@@ -64,7 +67,6 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
@@ -81,6 +83,8 @@ public class ChatActivity extends AppCompatActivity {
 
         userName.setText(messageReceiverName);
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.profile_image).into(userImage);
+
+        displayLastSeen();
     }
 
     private void initializeToolbar() {
@@ -103,10 +107,38 @@ public class ChatActivity extends AppCompatActivity {
         userMessagesList.setAdapter(messageAdapter);
     }
 
+    private void displayLastSeen() {
+        rootRef.child("Users").child(messageReceiverId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.child("userState").hasChild("state")) {
+                            String state = dataSnapshot.child("userState").child("state").getValue().toString();
+                            String date = dataSnapshot.child("userState").child("date").getValue().toString();
+                            String time = dataSnapshot.child("userState").child("time").getValue().toString();
+
+                            if (state.equals("online")) {
+                                userLastSeen.setText("online");
+                            } else if (state.equals("offline")) {
+                                userLastSeen.setText("últ. vez " + date + " a las " + time);
+                            }
+                        } else {
+                            userLastSeen.setText("offline");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
     private void initializeInputChat() {
-        myAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce_animation);
+        buttonAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce_animation);
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.3, 5);
-        myAnim.setInterpolator(interpolator);
+        buttonAnim.setInterpolator(interpolator);
 
         txtMessage = findViewById(R.id.input_message);
         btnSend = findViewById(R.id.send_message_button);
@@ -123,15 +155,23 @@ public class ChatActivity extends AppCompatActivity {
                 String text = txtMessage.getText().toString();
                 if (TextUtils.isEmpty(text.trim())) {
                     btnSend.setImageResource(R.drawable.ic_mic);
-                    if (text.equals("") && !oneCharacter) {
-                        btnSend.startAnimation(myAnim);
+                    if (text.trim().equals("") && !oneCharacter) {
+                        btnSend.startAnimation(buttonAnim);
                         oneCharacter = true;
+                        ObjectAnimator animation = ObjectAnimator.ofFloat(findViewById(R.id.right_buttons_layout), "translationX", -5f);
+                        animation.setDuration(200);
+                        animation.start();
+                        rightButtonsAnimation(false);
                     }
                 } else {
                     btnSend.setImageResource(R.drawable.ic_send);
-                    if (text.length() == 1 && oneCharacter) {
+                    if (text.trim().length() > 0 && oneCharacter) {
                         oneCharacter = false;
-                        btnSend.startAnimation(myAnim);
+                        btnSend.startAnimation(buttonAnim);
+                        ObjectAnimator animation = ObjectAnimator.ofFloat(findViewById(R.id.right_buttons_layout), "translationX", 65f);
+                        animation.setDuration(200);
+                        animation.start();
+                        rightButtonsAnimation(true);
                     }
                 }
             }
@@ -139,6 +179,12 @@ public class ChatActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+    }
+
+    private void rightButtonsAnimation(boolean yes) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 5.6f);
+        params.setMarginEnd(yes ? -60 : 0);
+        txtMessage.setLayoutParams(params);
     }
 
     @Override
@@ -181,29 +227,24 @@ public class ChatActivity extends AppCompatActivity {
         String messageText = txtMessage.getText().toString().trim();
         if (messageText.length() == 0)
             return;
+        txtMessage.setText("");
         String messageSenderRef = "Messages/" + messageSenderId + "/" + messageReceiverId;
         String messageReceiverRef = "Messages/" + messageReceiverId + "/" + messageSenderId;
 
         DatabaseReference userMessagesKeyRef = rootRef.child("Messages")
                 .child(messageSenderRef).child(messageReceiverId).push();
         String messagePushId = userMessagesKeyRef.getKey();
-        Map messageTextBody = new HashMap();
+        Map<String, String> messageTextBody = new HashMap<>();
         messageTextBody.put("message", messageText);
         messageTextBody.put("type", "text");
         messageTextBody.put("from", messageSenderId);
         messageTextBody.put("messageID", messagePushId);
 
-        Map messageBodyDetails = new HashMap();
+        Map<String, Object> messageBodyDetails = new HashMap<>();
         messageBodyDetails.put(messageSenderRef + "/" + messagePushId, messageTextBody);
         messageBodyDetails.put(messageReceiverRef + "/" + messagePushId, messageTextBody);
 
-        rootRef.updateChildren(messageBodyDetails).addOnCompleteListener(task -> {
-            if (task.isSuccessful())
-                Snackbar.make(txtMessage, "Mensaje enviado con éxito", Snackbar.LENGTH_SHORT).show();
-            else
-                Snackbar.make(txtMessage, "Error: " + task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
-            txtMessage.setText("");
-        });
+        rootRef.updateChildren(messageBodyDetails);
     }
 
     public void emojiAction(View view) {

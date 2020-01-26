@@ -18,12 +18,11 @@
         <activity
             android:name=".activities.UserProfileImageActivity"
             android:parentActivityName=".SettingsActivity"
-            android:theme="@style/Theme.Swipe.Back.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Swipe.Back.NoActionBar"></activity>
         <activity
             android:name=".activities.ChatActivity"
-            android:theme="@style/Theme.Swipe.Back.NoActionBar"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.Swipe.Back.NoActionBar" />
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".FindFriendsActivity"
@@ -47,11 +46,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat">
+
         </activity>
     </application>
 

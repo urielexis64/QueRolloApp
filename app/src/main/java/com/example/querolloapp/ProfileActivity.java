@@ -2,12 +2,19 @@ package com.example.querolloapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.querolloapp.activities.ProfileImagePreviewActivity;
+import com.example.querolloapp.activities.UserProfileImageActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -52,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
         chatRequestRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
-        notificationRef= FirebaseDatabase.getInstance().getReference().child("Notifications");
+        notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
         currentState = "new";
         senderUserId = mAtuh.getCurrentUser().getUid();
@@ -73,6 +81,19 @@ public class ProfileActivity extends AppCompatActivity {
                     Picasso.get().load(userImage).placeholder(R.drawable.profile_image).into(userProfileImage);
                     userProfileName.setText(userName);
                     userProfileStatus.setText(userStatus);
+
+                    userProfileImage.setOnClickListener(v -> {
+                        Intent previewIntent = new Intent(getApplicationContext(), UserProfileImageActivity.class);
+
+                        BitmapDrawable bitmapDrawable = ((BitmapDrawable) userProfileImage.getDrawable());
+                        Bitmap bitmap = bitmapDrawable.getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                        byte[] imageInByte = stream.toByteArray();
+                        previewIntent.putExtra("img", imageInByte);
+                        previewIntent.putExtra("username", userName);
+                        startActivity(previewIntent);
+                    });
                 } else {
                     String userName = dataSnapshot.child("name").getValue().toString();
                     String userStatus = dataSnapshot.child("status").getValue().toString();
@@ -231,13 +252,13 @@ public class ProfileActivity extends AppCompatActivity {
 
                                     notificationRef.child(receiverUserId).push()
                                             .setValue(chatNotificationMap)
-                                    .addOnCompleteListener(task2 -> {
-                                        if(task.isSuccessful()){
-                                            btnSendMessageRequest.setEnabled(true);
-                                            currentState = "request_sent";
-                                            btnSendMessageRequest.setText("Cancelar solicitud");
-                                        }
-                                    });
+                                            .addOnCompleteListener(task2 -> {
+                                                if (task.isSuccessful()) {
+                                                    btnSendMessageRequest.setEnabled(true);
+                                                    currentState = "request_sent";
+                                                    btnSendMessageRequest.setText("Cancelar solicitud");
+                                                }
+                                            });
 
 
                                 });

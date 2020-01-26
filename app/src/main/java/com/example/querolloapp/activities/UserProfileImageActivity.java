@@ -4,10 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,18 +30,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class UserProfileImageActivity extends AppCompatActivity {
     private SubsamplingScaleImageView img;
+    private Bitmap mBitmap;
 
     private ProgressDialog loadingBar;
 
     private String currentUserID;
     private static final int GALLERY_PICK = 1;
+    private boolean userProfile;
 
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
@@ -48,7 +62,9 @@ public class UserProfileImageActivity extends AppCompatActivity {
         img = findViewById(R.id.user_profile_image);
         img.setMaxScale(30);
         setSupportActionBar(findViewById(R.id.user_profile_image_toolbar));
-        getSupportActionBar().setTitle(getString(R.string.settings));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -58,16 +74,30 @@ public class UserProfileImageActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
 
         if (getIntent().hasExtra("image")) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(
+            mBitmap = BitmapFactory.decodeByteArray(
                     getIntent().getByteArrayExtra("image"), 0, getIntent().getByteArrayExtra("image").length);
-            img.setImage(ImageSource.bitmap(bitmap));
+            img.setImage(ImageSource.bitmap(mBitmap));
         }
+
+        if (getIntent().hasExtra("img")) {
+            mBitmap = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("img"), 0, getIntent().getByteArrayExtra("img").length);
+            img.setImage(ImageSource.bitmap(mBitmap));
+            getSupportActionBar().setTitle(getIntent().getStringExtra("username"));
+            userProfile = true;
+            return;
+        }
+
+        getSupportActionBar().setTitle(getString(R.string.settings));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        if (userProfile)
+            getMenuInflater().inflate(R.menu.user_profile_menu, menu);
+        else
+            getMenuInflater().inflate(R.menu.settings_menu, menu);
         return true;
     }
 
@@ -77,8 +107,32 @@ public class UserProfileImageActivity extends AppCompatActivity {
             case R.id.edit_image_menu_item:
                 sendUserToGallery();
                 break;
+            case R.id.share_profile_image:
+                shareProfileImage();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareProfileImage() {
+        Uri uri = null;
+        try {
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "to-share.png");
+            FileOutputStream stream = new FileOutputStream(file);
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            stream.close();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                uri = Uri.parse(file.getPath());
+            } else {
+                uri = Uri.fromFile(new File(file.getPath()));
+            }
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setType("image/*");
+            startActivity(Intent.createChooser(intent,"Share via"));
+        } catch (IOException e) {
+        }
     }
 
     private void sendUserToGallery() {
