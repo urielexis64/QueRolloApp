@@ -38,9 +38,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -54,7 +57,9 @@ public class ChatActivity extends AppCompatActivity {
     private CircleImageView userImage;
     private Toolbar chatToolbar;
     private EditText txtMessage;
-    private ImageButton btnSend;
+    private ImageButton btnSend, btnSendFiles;
+
+    private String saveCurrentTime, saveCurrentDate;
 
     private Animation buttonAnim;
     private FirebaseAuth mAuth;
@@ -142,6 +147,7 @@ public class ChatActivity extends AppCompatActivity {
 
         txtMessage = findViewById(R.id.input_message);
         btnSend = findViewById(R.id.send_message_button);
+        btnSendFiles = findViewById(R.id.send_files);
         findViewById(R.id.layout_back).setOnClickListener(v -> onBackPressed());
         findViewById(R.id.emoji).setTag(false);
 
@@ -179,6 +185,14 @@ public class ChatActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd 'de' MMMM 'del' yyyy", new Locale("ES"));
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
     }
 
     private void rightButtonsAnimation(boolean yes) {
@@ -190,7 +204,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        userMessagesList.removeAllViews();
         rootRef.child("Messages").child(messageSenderId).child(messageReceiverId)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
@@ -238,7 +252,10 @@ public class ChatActivity extends AppCompatActivity {
         messageTextBody.put("message", messageText);
         messageTextBody.put("type", "text");
         messageTextBody.put("from", messageSenderId);
+        messageTextBody.put("to", messageReceiverId);
         messageTextBody.put("messageID", messagePushId);
+        messageTextBody.put("time", saveCurrentTime);
+        messageTextBody.put("date", saveCurrentDate);
 
         Map<String, Object> messageBodyDetails = new HashMap<>();
         messageBodyDetails.put(messageSenderRef + "/" + messagePushId, messageTextBody);

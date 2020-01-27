@@ -209,7 +209,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private String lastDate;
 
     private CardView addCardMessage(String date, String username, String message, String time) {
-        if (date == null || !date.equals(lastDate)) {
+        if (!date.equals(lastDate)) {
             TextView txtDate = new TextView(this);
             LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             viewParams.gravity = Gravity.CENTER;

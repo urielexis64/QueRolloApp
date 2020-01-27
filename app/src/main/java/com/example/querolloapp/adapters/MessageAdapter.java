@@ -29,10 +29,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private DatabaseReference usersRef, messagesRef;
 
     private int seleccionados = 0;
+    private String lastDate;
 
     public MessageAdapter(List<Messages> userMessagesList) {
         this.userMessagesList = userMessagesList;
-        messagesRef= FirebaseDatabase.getInstance().getReference().child("Messages");
+        messagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
     }
 
 
@@ -40,7 +41,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public CardView receiverCard, senderCard;
         public TextView senderMessageText, receiverMessageText, senderTime, receiverTime;
         public RelativeLayout mainLayout;
-        public ImageView check;
+        public ImageView check, messageSenderPicture, messageReceiverPicture;
+        public TextView chatDate;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,6 +55,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             senderCard = itemView.findViewById(R.id.card2);
             mainLayout = itemView.findViewById(R.id.main_layout);
             check = itemView.findViewById(R.id.check);
+            messageSenderPicture = itemView.findViewById(R.id.message_sender_picture);
+            messageReceiverPicture = itemView.findViewById(R.id.message_receiver_picture);
+            chatDate = itemView.findViewById(R.id.chat_date);
         }
     }
 
@@ -90,7 +95,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             AlertDialog.Builder builder = new AlertDialog.Builder(messageViewHolder.mainLayout.getContext());
             builder.setTitle("Choose an option:");
             builder.setItems(options, (dialog, index) -> {
-                if(index == 0)
+                if (index == 0)
                     removeMessage(i);
             });
             builder.show();
@@ -105,7 +110,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 messageViewHolder.mainLayout.setBackgroundColor(Color.parseColor("#6500E5FF"));
                 messageViewHolder.mainLayout.setTag("selected");
                 seleccionados++;
-            }else if(seleccionados > 0){
+            } else if (seleccionados > 0) {
                 messageViewHolder.senderCard.setCardBackgroundColor(ContextCompat.getColor(messageViewHolder.mainLayout.getContext(), R.color.chat_user_background));
                 messageViewHolder.receiverCard.setCardBackgroundColor(Color.WHITE);
                 messageViewHolder.mainLayout.setBackgroundColor(0);
@@ -114,22 +119,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         });
 
-        if (fromMessageType.equals("text")) {
-            messageViewHolder.receiverCard.setVisibility(View.INVISIBLE);
-            messageViewHolder.senderCard.setVisibility(View.INVISIBLE);
+        messageViewHolder.chatDate.setVisibility(View.GONE);
+        messageViewHolder.receiverCard.setVisibility(View.GONE);
+        messageViewHolder.senderCard.setVisibility(View.GONE);
+        messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
+        messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
 
+        if (!messages.getDate().equals(lastDate)) {
+            messageViewHolder.chatDate.setVisibility(View.VISIBLE);
+            messageViewHolder.chatDate.setText(messages.getDate());
+            lastDate = messages.getDate();
+        }
+
+        if (fromMessageType.equals("text")) {
             if (fromUserID.equals(messageSenderId)) {
                 messageViewHolder.mainLayout.setGravity(Gravity.END);
                 messageViewHolder.senderCard.setVisibility(View.VISIBLE);
                 messageViewHolder.check.setImageResource(R.drawable.ic_double_check);
 
                 messageViewHolder.senderMessageText.setText(messages.getMessage());
-                messageViewHolder.senderTime.setText("10:00 a. m.");
+                messageViewHolder.senderTime.setText(messages.getTime());
             } else {
                 messageViewHolder.mainLayout.setGravity(Gravity.START);
                 messageViewHolder.receiverCard.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverMessageText.setText(messages.getMessage());
-                messageViewHolder.receiverTime.setText("10:00 a. m.");
+                messageViewHolder.receiverTime.setText(messages.getTime());
             }
         }
     }
@@ -140,12 +154,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String fromUserID = messages.getTo();
         String messageId = messages.getMessageID();
 
-        System.out.println("Messages/"+messageSenderId+"/"+fromUserID+"/"+messageId);
-
         messagesRef.child(messageSenderId).child(fromUserID).child(messageId).removeValue().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 messagesRef.child(fromUserID).child(messageSenderId).child(messageId).removeValue().addOnCompleteListener(task2 -> {
-                    if(task2.isSuccessful()){
+                    if (task2.isSuccessful()) {
                         System.out.println("Mensaje eliminado");
                     }
                 });
