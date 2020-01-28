@@ -1,14 +1,17 @@
 package com.example.querolloapp.adapters;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -39,10 +42,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
         public CardView receiverCard, senderCard;
-        public TextView senderMessageText, receiverMessageText, senderTime, receiverTime;
-        public RelativeLayout mainLayout;
+        public TextView senderMessageText, receiverMessageText, senderTime, receiverTime, txtDate;
+        public LinearLayout mainLayout;
         public ImageView check, messageSenderPicture, messageReceiverPicture;
-        public TextView chatDate;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -57,7 +59,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             check = itemView.findViewById(R.id.check);
             messageSenderPicture = itemView.findViewById(R.id.message_sender_picture);
             messageReceiverPicture = itemView.findViewById(R.id.message_receiver_picture);
-            chatDate = itemView.findViewById(R.id.chat_date);
+            txtDate = itemView.findViewById(R.id.txt_date);
         }
     }
 
@@ -96,7 +98,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             builder.setTitle("Choose an option:");
             builder.setItems(options, (dialog, index) -> {
                 if (index == 0)
-                    removeMessage(i);
+                    removeMessage(i, messageViewHolder.itemView.getContext());
             });
             builder.show();
 
@@ -119,16 +121,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         });
 
-        messageViewHolder.chatDate.setVisibility(View.GONE);
         messageViewHolder.receiverCard.setVisibility(View.GONE);
         messageViewHolder.senderCard.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
 
         if (!messages.getDate().equals(lastDate)) {
-            messageViewHolder.chatDate.setVisibility(View.VISIBLE);
-            messageViewHolder.chatDate.setText(messages.getDate());
             lastDate = messages.getDate();
+            messageViewHolder.txtDate.setVisibility(View.VISIBLE);
+            messageViewHolder.txtDate.setText(messages.getDate());
         }
 
         if (fromMessageType.equals("text")) {
@@ -148,7 +149,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
-    private void removeMessage(int i) {
+    private void removeMessage(int i, Context c) {
         String messageSenderId = mAuth.getCurrentUser().getUid();
         Messages messages = userMessagesList.get(i);
         String fromUserID = messages.getTo();
@@ -158,7 +159,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             if (task.isSuccessful()) {
                 messagesRef.child(fromUserID).child(messageSenderId).child(messageId).removeValue().addOnCompleteListener(task2 -> {
                     if (task2.isSuccessful()) {
-                        System.out.println("Mensaje eliminado");
+                        Toast.makeText(c, c.getString(R.string.message_deleted), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

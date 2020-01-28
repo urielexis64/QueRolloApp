@@ -29,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             sendUserToLoginActivity();
         } else {
-            updateUserStatus("online");
-            verifyUserExistance();
+            updateUserStatus(getResources().getString(R.string.online));
+            verifyUserExistence();
         }
     }
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null && !onMenuItem)
-            updateUserStatus("offline");
+            updateUserStatus(getResources().getString(R.string.offline));
     }
 
     @Override
@@ -96,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null)
-            updateUserStatus("offline");
+            updateUserStatus(getResources().getString(R.string.offline));
     }
 
-    private void verifyUserExistance() {
+    private void verifyUserExistence() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null)
             return;
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.main_settings_option) {
             sendUserToSettingsActivity();
         } else if (itemId == R.id.main_logout_option) {
-            updateUserStatus("offline");
+            updateUserStatus(getResources().getString(R.string.offline));
             mAuth.signOut();
             sendUserToLoginActivity();
         } else if (itemId == R.id.main_create_group_option) {
@@ -210,10 +212,10 @@ public class MainActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd/MMM/yyyy");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd/MMM/yyyy", new Locale("ES"));
         saveCurrentDate = currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a",Locale.US);
         saveCurrentTime = currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineState = new HashMap<>();
@@ -221,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         onlineState.put("date", saveCurrentDate);
         onlineState.put("state", state);
 
-        currentUserId = mAuth.getCurrentUser().getUid();
+        currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         rootRef.child("Users").child(currentUserId).child("userState")
                 .updateChildren(onlineState);
     }

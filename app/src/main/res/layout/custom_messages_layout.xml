@@ -1,160 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:gravity="end">
+    android:gravity="end"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/date_layout"
+    <TextView
+        android:id="@+id/txt_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:background="@drawable/background_group_date_text"
+        android:padding="4dp"
+        android:textAlignment="center"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/chat_date"
+    <LinearLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/background_group_date_text"
-            android:padding="10dp"
-            android:text="10 de enero del 2019"
-            android:textAllCaps="true"
-            android:textSize="14sp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="2dp"
+            app:cardBackgroundColor="@android:color/background_light"
+            app:cardCornerRadius="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/message_receiver_picture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/login_photo" />
+
+                <TextView
+                    android:id="@+id/receiver_message_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="230dp"
+                    android:padding="6dp"
+                    android:text="Hola"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="-10dp"
+                    android:gravity="bottom"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/receiver_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="9"
+                        android:padding="2dp"
+                        android:text="10:00 a. m."
+                        android:textAlignment="textEnd"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="2dp"
+            android:layout_toEndOf="@id/card1"
+            app:cardBackgroundColor="@color/chat_user_background"
+            app:cardCornerRadius="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/message_sender_picture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/login_photo" />
+
+                <TextView
+                    android:id="@+id/sender_message_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="260dp"
+                    android:padding="6dp"
+                    android:text="Holaaaa como te va"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="-10dp"
+                    android:gravity="bottom"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/sender_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="9"
+                        android:padding="2dp"
+                        android:text="10:00 a. m."
+                        android:textAlignment="textEnd"
+                        android:textSize="10sp" />
+
+                    <ImageView
+                        android:id="@+id/check"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="2dp"
+                        android:src="@drawable/ic_check" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/date_layout"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="2dp"
-        app:cardBackgroundColor="@android:color/background_light"
-        app:cardCornerRadius="6dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/message_receiver_picture"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/login_photo" />
-
-            <TextView
-                android:id="@+id/receiver_message_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="230dp"
-                android:padding="6dp"
-                android:text="Hola"
-                android:textColor="#000"
-                android:textSize="15sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="-10dp"
-                android:gravity="bottom"
-                android:weightSum="10">
-
-                <TextView
-                    android:id="@+id/receiver_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="9"
-                    android:padding="2dp"
-                    android:text="10:00 a. m."
-                    android:textAlignment="textEnd"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/date_layout"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="2dp"
-        android:layout_toEndOf="@id/card1"
-        app:cardBackgroundColor="@color/chat_user_background"
-        app:cardCornerRadius="4dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/message_sender_picture"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/login_photo" />
-
-            <TextView
-                android:id="@+id/sender_message_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="260dp"
-                android:padding="6dp"
-                android:text="Holaaaa como te va"
-                android:textColor="#000"
-                android:textSize="15sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="-10dp"
-                android:gravity="bottom"
-                android:weightSum="10">
-
-                <TextView
-                    android:id="@+id/sender_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="9"
-                    android:padding="2dp"
-                    android:text="10:00 a. m."
-                    android:textAlignment="textEnd"
-                    android:textSize="10sp" />
-
-                <ImageView
-                    android:id="@+id/check"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="2dp"
-                    android:src="@drawable/ic_check" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-</RelativeLayout>
+</LinearLayout>

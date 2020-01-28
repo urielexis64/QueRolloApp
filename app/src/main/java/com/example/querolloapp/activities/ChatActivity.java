@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.querolloapp.adapters.MessageAdapter;
 import com.example.querolloapp.animations.MyBounceInterpolator;
@@ -122,13 +123,13 @@ public class ChatActivity extends AppCompatActivity {
                             String date = dataSnapshot.child("userState").child("date").getValue().toString();
                             String time = dataSnapshot.child("userState").child("time").getValue().toString();
 
-                            if (state.equals("online")) {
-                                userLastSeen.setText("online");
-                            } else if (state.equals("offline")) {
+                            if (state.equals(getResources().getString(R.string.online))) {
+                                userLastSeen.setText(getResources().getString(R.string.online));
+                            } else if (state.equals(getResources().getString(R.string.offline))) {
                                 userLastSeen.setText("últ. vez " + date + " a las " + time);
                             }
                         } else {
-                            userLastSeen.setText("offline");
+                            userLastSeen.setText(getResources().getString(R.string.offline));
                         }
                     }
 
@@ -204,7 +205,6 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        userMessagesList.removeAllViews();
         rootRef.child("Messages").child(messageSenderId).child(messageReceiverId)
                 .addChildEventListener(new ChildEventListener() {
                     @Override

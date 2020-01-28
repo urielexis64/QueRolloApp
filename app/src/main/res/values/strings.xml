@@ -37,4 +37,7 @@
     <string name="profile_image_shared">profile_image_shared</string>
     <string name="user_name_shared">user_name_shared</string>
     <string name="status_shared">status_shared</string>
+    <string name="online">En línea</string>
+    <string name="offline">desconectado</string>
+    <string name="message_deleted">Mensaje eliminado</string>
 </resources>
