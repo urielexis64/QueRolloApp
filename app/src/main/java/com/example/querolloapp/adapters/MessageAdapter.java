@@ -2,14 +2,16 @@ package com.example.querolloapp.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +21,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.querolloapp.R;
+import com.example.querolloapp.activities.UserProfileImageActivity;
 import com.example.querolloapp.entities.Messages;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
@@ -37,6 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageAdapter(List<Messages> userMessagesList) {
         this.userMessagesList = userMessagesList;
         messagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+        usersRef =  FirebaseDatabase.getInstance().getReference().child("Users");
     }
 
 
@@ -144,6 +150,48 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 messageViewHolder.mainLayout.setGravity(Gravity.START);
                 messageViewHolder.receiverCard.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverMessageText.setText(messages.getMessage());
+                messageViewHolder.receiverTime.setVisibility(View.GONE);
+            }
+        } else if (fromMessageType.equals("image")) {
+            if (fromUserID.equals(messageSenderId)) {
+                messageViewHolder.mainLayout.setGravity(Gravity.END);
+                messageViewHolder.senderCard.setVisibility(View.VISIBLE);
+                messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
+                messageViewHolder.check.setImageResource(R.drawable.ic_double_check);
+
+                messageViewHolder.senderMessageText.setVisibility(View.GONE);
+                Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageSenderPicture);
+                messageViewHolder.messageSenderPicture.setOnClickListener(v -> {
+                    Context context = messageViewHolder.itemView.getContext();
+                    Intent openImage = new Intent(context, UserProfileImageActivity.class);
+                    BitmapDrawable bitmapDrawable = ((BitmapDrawable) messageViewHolder.messageSenderPicture.getDrawable());
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] imageInByte = stream.toByteArray();
+                    openImage.putExtra("uri", imageInByte);
+                    openImage.putExtra("username", "Tú");
+                    context.startActivity(openImage);
+                });
+                messageViewHolder.senderTime.setText(messages.getTime());
+            } else {
+                messageViewHolder.mainLayout.setGravity(Gravity.START);
+                messageViewHolder.receiverCard.setVisibility(View.VISIBLE);
+                messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
+                messageViewHolder.receiverMessageText.setVisibility(View.GONE);
+                Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageReceiverPicture);
+                messageViewHolder.messageReceiverPicture.setOnClickListener(v -> {
+                    Context context = messageViewHolder.itemView.getContext();
+                    Intent openImage = new Intent(context, UserProfileImageActivity.class);
+                    BitmapDrawable bitmapDrawable = ((BitmapDrawable) messageViewHolder.messageReceiverPicture.getDrawable());
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] imageInByte = stream.toByteArray();
+                    openImage.putExtra("uri", imageInByte);
+
+                    context.startActivity(openImage);
+                });
                 messageViewHolder.receiverTime.setText(messages.getTime());
             }
         }
@@ -164,6 +212,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 });
             }
         });
+
     }
 
     @Override

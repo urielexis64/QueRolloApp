@@ -42,8 +42,8 @@
 
                 <ImageView
                     android:id="@+id/message_receiver_picture"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/login_photo" />
 
@@ -62,7 +62,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="-10dp"
                     android:gravity="bottom"
                     android:weightSum="10">
 
@@ -101,9 +100,10 @@
 
                 <ImageView
                     android:id="@+id/message_sender_picture"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:scaleType="centerCrop"
+                    android:transitionName="settings_transition"
                     android:src="@drawable/login_photo" />
 
                 <TextView
@@ -121,7 +121,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="-10dp"
                     android:gravity="bottom"
                     android:weightSum="10">
 

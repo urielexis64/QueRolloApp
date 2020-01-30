@@ -40,4 +40,7 @@
     <string name="online">En línea</string>
     <string name="offline">desconectado</string>
     <string name="message_deleted">Mensaje eliminado</string>
+    <string name="gallery">Galería</string>
+    <string name="audio">Audio</string>
+    <string name="contact">Contacto</string>
 </resources>

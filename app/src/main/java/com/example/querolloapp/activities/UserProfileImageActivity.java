@@ -88,6 +88,15 @@ public class UserProfileImageActivity extends AppCompatActivity {
             return;
         }
 
+        if (getIntent().hasExtra("uri")) {
+            mBitmap = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("uri"), 0, getIntent().getByteArrayExtra("uri").length);
+            img.setImage(ImageSource.bitmap(mBitmap));
+            getSupportActionBar().setTitle(getIntent().getStringExtra("username"));
+            userProfile = true;
+            return;
+        }
+
         getSupportActionBar().setTitle(getString(R.string.settings));
     }
 

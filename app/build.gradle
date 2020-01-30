@@ -51,6 +51,9 @@ dependencies {
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.zolad:zoominimageview:1.0.0'
     //implementation 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'
+    implementation ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+        transitive = true;
+    }
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
